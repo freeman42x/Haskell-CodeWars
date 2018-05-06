@@ -1,5 +1,6 @@
 module Code1 where
 
+import           Control.Applicative
 import           Data.Char
 import           Data.List
 import           Debug.Trace
@@ -103,3 +104,99 @@ formatFloatN floatNum numOfDecimals = showFFloat (Just numOfDecimals) floatNum "
 -- 1234567890
 digit5 :: String -> Int
 digit5 xs = maximum $ map (\s -> read s :: Int) $ take (length xs - 4) $ take 5 <$> tails xs
+
+nbDig :: Int -> Int -> Int
+nbDig n d = length $ filter (== intToDigit d) $ concat [show $ i ^ 2 | i <- [1..n]]
+
+nbDigTest = nbDig 10 1
+
+
+evaporator :: Double -> Double -> Double -> Integer
+evaporator content evap_per_day threshold = fromIntegral
+  $ length $ takeWhile (> threshold * 100) $ iterate (\x -> x * (100 - evap_per_day)/100) 100
+
+divisors :: Int -> Int
+divisors n = length [ i | i <- [1..n], n `mod` i == 0]
+
+
+-- mxdiflg :: [String] -> [String] -> Maybe Int
+-- mxdiflg s1 s2
+--   | null s1 || null s2 = Nothing
+--   | otherwise =
+--     where
+
+
+
+s1 = ["hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz"]
+s2 = ["cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww"]
+
+-- max(abs(length(x) − length(y)))
+
+mxdiflg :: [String] -> [String] -> Maybe Int
+mxdiflg s1 s2
+  | null s1 || null s2 = Nothing
+  | otherwise = Just $ maximum $ (\(a,b) -> abs (length a - length b)) <$> liftA2(,) s1 s2
+
+-- s 5 = [0, 1, 3, 6, 10, 15]
+
+s :: Int -> [Int]
+s n = fmap (\i -> i * signum n) $ take (abs n + 1) $ (\i -> sum [0..i]) <$> [0..]
+
+
+sequenceSum :: Int -> String
+sequenceSum n
+  | n < 0 = show n ++ "<0"
+  | n == 0 = "0 = 0"
+  | otherwise = intercalate "+" (map show [0..6]) ++ " = " ++ show (sum [1..6])
+
+
+data Operation = Add | Divide | Multiply | Subtract deriving (Eq, Show, Enum, Bounded)
+
+arithmetic :: Fractional a => a -> a -> Operation -> a
+arithmetic a b operator = case operator of
+  Add      -> a + b
+  Divide   -> a / b
+  Multiply -> a * b
+  Subtract -> a - b
+
+
+isVampire :: Integer -> Integer -> Bool
+isVampire a b = isVampire' xs ps
+  where as = show a
+        bs = show b
+        xs = as ++ bs
+        ps = show $ a * b
+
+isVampire' :: String -> String -> Bool
+isVampire' [] []     = True
+isVampire' [] _      = True
+isVampire' _ []      = False
+isVampire' (f:fs) ts = f `elem` ts && isVampire' fs (delete f ts)
+
+
+-- head :: [a] -> a
+-- head (x:_) = x
+--
+-- tail :: [a] -> [a]
+-- tail (_:xs) = xs
+--
+-- last :: [a] -> a
+-- last = Code1.head . reverse
+--
+-- init :: [a] -> [a]
+-- init = reverse . Code1.tail . reverse
+
+
+findSum n = sum $ filter (\i -> i `mod` 3 == 0 || i `mod` 5 == 0) [0..n]
+
+
+averages :: Maybe [Double] -> [Double]
+averages mxs =
+  case mxs of
+    Nothing -> []
+    Just xs -> averages' xs
+
+averages' :: [Double] -> [Double]
+averages' []  = []
+averages' [x] = []
+averages' xs  = zipWith (\a b -> (a + b) / 2) xs (tail xs)
