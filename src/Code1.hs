@@ -3,8 +3,12 @@ module Code1 where
 import           Control.Applicative
 import           Data.Char
 import           Data.List
+import           Data.List.Split
+import           Data.Maybe
+import           Data.Ord
 import           Debug.Trace
 import           Numeric
+import           Text.Printf
 
 remove :: String -> Int -> String
 remove s 0 = s
@@ -200,3 +204,259 @@ averages' :: [Double] -> [Double]
 averages' []  = []
 averages' [x] = []
 averages' xs  = zipWith (\a b -> (a + b) / 2) xs (tail xs)
+
+
+replace old new = intercalate new . splitOn old
+
+
+reverseLonger :: String -> String -> String
+reverseLonger a b = shorter ++ reverse longer ++ shorter
+  where
+    shorter = if length a > length b then b else a
+    longer = if length a > length b then a else b
+
+
+
+pattern :: Int -> String
+pattern n = intercalate "\n" $ map (\xs -> concat $ map show $ reverse xs) [[i..n] | i <- [1..n]]
+
+
+fizzbuzz :: Int -> [String]
+fizzbuzz n = fb <$> [1..n]
+
+fb n
+  | n `mod` 5 == 0 && n `mod` 3 == 0 = "FizzBuzz"
+  | n `mod` 3 == 0 = "Fizz"
+  | n `mod` 5 == 0 = "Buzz"
+  | otherwise = show n
+
+
+isSortedAndHow :: [Int] -> String
+isSortedAndHow lst
+  | sort lst == lst = "yes, ascending"
+  | sort lst == reverse lst = "yes, descending"
+  | otherwise = "no"
+
+
+solution :: Int -> String
+solution n = "Value is " ++ padd n 5
+
+padd :: Int -> Int -> String
+padd n d = last $ takeWhile (\i -> length i <= d) $ iterate ("0"++) (show n)
+
+
+
+letters :: [(Char, String)]
+letters =  [
+    ('A', "Alpha"),  ('B', "Bravo"),   ('C', "Charlie"),
+    ('D', "Delta"),  ('E', "Echo"),    ('F', "Foxtrot"),
+    ('G', "Golf"),   ('H', "Hotel"),   ('I', "India"),
+    ('J', "Juliett"),('K', "Kilo"),    ('L', "Lima"),
+    ('M', "Mike"),   ('N', "November"),('O', "Oscar"),
+    ('P', "Papa"),   ('Q', "Quebec"),  ('R', "Romeo"),
+    ('S', "Sierra"), ('T', "Tango"),   ('U', "Uniform"),
+    ('V', "Victor"), ('W', "Whiskey"), ('X', "X-ray"),
+    ('Y', "Yankee"), ('Z', "Zulu")
+  ]
+
+nato :: String -> String
+nato str = unwords $ (\c -> fromJust $ lookup (toUpper c) letters) <$> str
+
+
+
+solution2 :: String -> String -> Int
+solution2 xs x = length $ filter (\ys -> ys == x && length ys > 0) $ subLists xs
+
+subLists :: [a] -> [[a]]
+subLists xs = [] : concat [ divvy n 1 xs | n <- [1..length xs] ]
+
+
+
+gps :: Int -> [Double] -> Int
+gps s x = floor $ (3600 * delta_distance) / fromIntegral s
+  where delta_distance = maximum $ zipWith (\a b -> b - a) (init x) (tail x)
+
+
+
+partlist :: [String] -> [(String, String)]
+partlist arr = [ (unwords $ take i arr, unwords $ drop i arr) | i <- [1..length arr - 1]]
+
+
+
+candies :: [Int] -> Int
+candies xs
+  | length xs < 2 = -1
+  | otherwise = sum $ (m -) <$> xs
+  where m = maximum xs
+
+
+isAscOrder :: [Int] -> Bool
+isAscOrder xs = sort xs == xs
+
+
+
+mostFrequentItemCount :: [Int] -> Int
+mostFrequentItemCount [] = 0
+mostFrequentItemCount xs = fst $ maximum $ fmap (\x -> (length x, head x)) $ group $ sort xs
+
+
+
+hasUniqueChar :: String -> Bool
+hasUniqueChar str = length str == (length $ nub str)
+
+
+
+compare' :: Maybe String -> Maybe String -> Bool
+compare' Nothing Nothing = True
+compare' Nothing s2 = compare' (Just "") s2
+compare' s1 Nothing = compare' s1 (Just "")
+compare'(Just s1) (Just s2)
+  = sumCode st1 == sumCode st2
+    where sumCode s = foldr (\c acc -> acc + ord (toUpper c)) 0 s
+          nillify s = if not $ all isAlpha s then "" else s
+          st1 = nillify s1
+          st2 = nillify s2
+
+
+
+toCurrency :: Integer -> String
+toCurrency price = reverse $ intercalate "," $ chunksOf 3 (reverse $ show price)
+
+
+
+sortDict :: Ord v => [(k,v)] -> [(k,v)]
+sortDict = sortBy (comparing (Down . snd))
+
+
+
+
+dict = [
+  (' ', ' '),
+  ('A', '@'),
+  ('B', '8'),
+  ('C', '('),
+  ('D', 'D'),
+  ('E', '3'),
+  ('F', 'F'),
+  ('G', '6'),
+  ('H', '#'),
+  ('I', '!'),
+  ('J', 'J'),
+  ('K', 'K'),
+  ('L', '1'),
+  ('M', 'M'),
+  ('N', 'N'),
+  ('O', '0'),
+  ('P', 'P'),
+  ('Q', 'Q'),
+  ('R', 'R'),
+  ('S', '$'),
+  ('T', '7'),
+  ('U', 'U'),
+  ('V', 'V'),
+  ('W', 'W'),
+  ('X', 'X'),
+  ('Y', 'Y'),
+  ('Z', '2')];
+
+toLeetSpeak :: String -> String
+toLeetSpeak = fmap (fromJust . (`lookup` dict))
+
+
+
+
+vertMirror :: [Char] -> [Char]
+vertMirror strng = intercalate "\n" $ map reverse $ splitOn "\n" strng
+
+horMirror :: [Char] -> [Char]
+horMirror strng = intercalate "\n" $ reverse $ splitOn "\n" strng
+
+oper :: (String -> String) -> String -> String
+oper fct strng = undefined
+
+
+
+sunTriNumbers :: Integer -> Integer
+sunTriNumbers n = sum $ scanl (+) 0 [1..n]
+
+
+
+solution3 :: Integer -> Integer
+solution3 number = sum $ filter (\i -> i `mod` 3 == 0 || i `mod` 5 == 0) [3..number - 1]
+
+
+
+findOdd :: [Int] -> Int
+findOdd xs = head $ fromJust $ find (\g -> odd $ length g) $ group $ sort xs
+
+
+spinWords :: String -> String
+spinWords str = unwords $ fmap (\s -> if length s > 4 then reverse s else s) $ words str
+
+
+
+digitalRoot :: Integral a => a -> a
+digitalRoot n = if s < 10 then s else digitalRoot s
+  where s = groot n
+
+groot :: Integral a => a -> a
+groot n = fromIntegral $ sum $ fmap digitToInt $ show $ fromIntegral n
+
+
+
+maxRot :: Integer -> Integer
+maxRot n = maximum $ (read <$> scanl (\acc a -> (take a acc) ++ (rotate $ drop a acc)) ns [0..length ns - 1])
+  where ns = show n
+
+rotate :: String -> String
+rotate (x:xs) = xs ++ [x]
+
+
+
+oddCubed :: [Int] -> Int
+oddCubed = sum . filter odd . fmap (^3)
+
+
+
+swap :: String -> String
+swap = fmap (\c -> if isUpper c then toLower c else toUpper c)
+
+
+
+newAvg :: [Double] -> Double -> Maybe Int
+newAvg xs navg = if n <= 0 then Nothing else Just n
+  where n = round (navg * fromIntegral (length xs + 1) - sum xs)
+
+
+
+notVisibleCubes :: Integer -> Integer
+notVisibleCubes n = (n - 2) ^ 3
+
+
+
+shadesOfGrey :: Int -> [String]
+shadesOfGrey n
+  | n < 1 = []
+  | otherwise = fmap (\i -> fmap toLower $ printf "#%06X" (i * 65793) :: String) ([1..n] :: [Int])
+
+
+
+-- isPowerOf4 :: Integral n => n -> Bool
+-- isPowerOf4 n
+--   | null tw = False
+--   | otherwise = n == ((4^) $ last tw)
+--   where tw = takeWhile (\i -> 4 ^ i <= n) [1..]
+
+
+isPowerOf4 :: Integral n => n -> Bool
+isPowerOf4 n
+  | n == 1 = True
+  | n `mod` 4 == 0 = isPowerOf4 $ n `div` 4
+  | otherwise = False
+
+
+
+
+numbersWithDigitInside :: Int -> Int -> [Int]
+numbersWithDigitInside x d = [length xs, sum xs, if null xs then 0 else product xs]
+  where xs = filter (\i ->  intToDigit d `elem` show i) [1..x]
