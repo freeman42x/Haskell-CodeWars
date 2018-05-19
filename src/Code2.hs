@@ -97,3 +97,34 @@ movie card ticket perc = head $ dropWhile (\n -> sysA n <= sysB n) [1..]
   where
     sysA n = ticket * n
     sysB n = ceiling (fromIntegral card + fromIntegral ticket * ((perc ^ (n + 1) - perc) / (perc - 1)))
+
+
+
+data Property = Property Bool   Bool  Bool deriving Show
+                      -- prime  even  10*
+
+numberProperty :: Integral n => n -> Property
+numberProperty n = Property (isPrime n) (isEven n) (isMul10 n)
+  where
+    isEven n = n `mod` 2 == 0
+    isMul10 n = n `mod` 10 == 0
+    isPrime n
+      | n < 2 = False
+      | otherwise = null [ x | x <- [2..n-1], n `mod` x  == 0]
+
+
+mainDiagonalProduct :: Num a => [[a]] -> a
+mainDiagonalProduct mat = product $ zipWith (!!) mat [0..]
+
+
+
+add :: (Num a, Enum a) => [a] -> a
+add = sum . zipWith (*) [1..]
+
+
+
+gcd :: Integral n => n -> n -> n
+gcd x y = gcd_ (abs x) (abs y)
+  where
+    gcd_ a 0 = a
+    gcd_ a b = gcd_ b (a `rem` b)
