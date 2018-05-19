@@ -128,3 +128,10 @@ gcd x y = gcd_ (abs x) (abs y)
   where
     gcd_ a 0 = a
     gcd_ a b = gcd_ b (a `rem` b)
+
+
+
+mean :: String -> (Double, String)
+mean lst = (avg, str)
+  where avg = (/ 10) $ fromIntegral $ sum $ map digitToInt $ filter isDigit lst
+        str = filter isLetter lst
