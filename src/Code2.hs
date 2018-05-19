@@ -61,7 +61,7 @@ rakeGarden = unwords . fmap (\w -> if w == "rock" then "rock" else "gravel") . w
 
 
 containAllRots :: String -> [String] -> Bool
-containAllRots strng arr = all ((`elem` arr)) $ allRots strng
+containAllRots strng arr = all (`elem` arr) $ allRots strng
 
 allRots :: String -> [String]
 allRots s = fmap (`rotate` s) [0..length s - 1]
@@ -69,3 +69,31 @@ allRots s = fmap (`rotate` s) [0..length s - 1]
 rotate :: Int -> [a] -> [a]
 rotate _ [] = []
 rotate n xs = zipWith const (drop n (cycle xs)) xs
+
+
+
+reverseByCenter :: String -> String
+reverseByCenter xs = x2 ++ x1 ++ x0
+  where first = length xs `div` 2
+        mid = length xs `mod` 2
+        x0 = take first xs
+        x1 = take mid $ drop first xs
+        x2 = drop (first + mid) xs
+
+
+
+capitalize :: String -> [Int] -> String
+capitalize s xs = zipWith (\c i -> if i `elem` xs then toUpper c else c) s [0..]
+
+
+
+differenceOfSquares :: Integer -> Integer
+differenceOfSquares n = sum [1..n] ^ 2 - sum [i ^ 2 | i <- [1..n]]
+
+
+
+movie :: Int -> Int -> Double -> Int
+movie card ticket perc = head $ dropWhile (\n -> sysA n <= sysB n) [1..]
+  where
+    sysA n = ticket * n
+    sysB n = ceiling (fromIntegral card + fromIntegral ticket * ((perc ^ (n + 1) - perc) / (perc - 1)))
