@@ -135,3 +135,35 @@ mean :: String -> (Double, String)
 mean lst = (avg, str)
   where avg = (/ 10) $ fromIntegral $ sum $ map digitToInt $ filter isDigit lst
         str = filter isLetter lst
+
+
+
+sumFromString :: String -> Integer
+sumFromString n = sum $ snd $ foldl f ("",[0]) (n ++ " ")
+  where f (s, nos) a =
+          if isDigit a then (s ++ [a], nos)
+                       else ("", if s /= "" then nos ++ [read s] else nos)
+
+
+
+reverseFun :: String -> String
+reverseFun s = foldl f s [0..length s - 1]
+  where f acc i = take i acc ++ reverse (drop i acc)
+
+
+
+longest :: [String] -> Int
+longest = maximum . map length
+
+
+
+alternateCase :: String -> String
+alternateCase = map (\c -> if isUpper c then toLower c else toUpper c)
+
+
+
+climb :: Int -> [Int]
+climb x = go x []
+  where go x ss
+          | x == 1 = x : ss
+          | otherwise = go (x `div` 2) (x : ss)
