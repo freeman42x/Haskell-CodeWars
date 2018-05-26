@@ -167,3 +167,23 @@ climb x = go x []
   where go x ss
           | x == 1 = x : ss
           | otherwise = go (x `div` 2) (x : ss)
+
+
+
+amIAfraid :: String -> Int -> Bool
+amIAfraid dayOfTheWeek num =
+  case dayOfTheWeek of
+    "Monday"    -> num == 12
+    "Tuesday"   -> num > 95
+    "Wednesday" -> num == 34
+    "Thursday"  -> num == 0
+    "Friday"    -> even num
+    "Saturday"  -> num == 56
+    "Sunday"    -> abs num == 666
+
+
+
+fizzbuzz :: Int -> [Int]
+fizzbuzz n = [ length $ filter (\i -> i `mod` 3 == 0 && i `mod` 5 /= 0) [1..n-1]
+             , length $ filter (\i -> i `mod` 3 /= 0 && i `mod` 5 == 0) [1..n-1]
+             , length $ filter (\i -> i `mod` 3 == 0 && i `mod` 5 == 0) [1..n-1]]
