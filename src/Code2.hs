@@ -187,3 +187,38 @@ fizzbuzz :: Int -> [Int]
 fizzbuzz n = [ length $ filter (\i -> i `mod` 3 == 0 && i `mod` 5 /= 0) [1..n-1]
              , length $ filter (\i -> i `mod` 3 /= 0 && i `mod` 5 == 0) [1..n-1]
              , length $ filter (\i -> i `mod` 3 == 0 && i `mod` 5 == 0) [1..n-1]]
+
+
+
+pattern :: Int -> String
+pattern n
+  | n < 1 = ""
+  | otherwise = init $ unlines [ concatMap show [i..n] | i <- [1..n]]
+
+
+
+filterNumbers :: String -> String
+filterNumbers = filter (not . isDigit)
+
+
+
+validateWord :: String -> Bool
+validateWord word = all (\c -> c == cf) $ tail cc
+  where w = map toLower word
+        cc = map (\c -> length $ filter (==c) w) $ nub w
+        cf = head cc
+
+
+
+zipValidate :: String -> Bool
+zipValidate s = (length $ filter isDigit s) == 6 && head s `elem` "12346"
+
+
+
+explode :: String -> String
+explode = concatMap (\c -> replicate (read [c]) c)
+
+
+
+stringCounter :: String -> Char -> Int
+stringCounter inputS charS = length $ filter (== charS) inputS
