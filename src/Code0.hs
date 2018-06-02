@@ -4,7 +4,6 @@ import           Control.Arrow   ((&&&))
 import           Data.Char
 import           Data.List
 import           Data.List.Split
-import           Debug.Trace
 
 solve1 :: String -> String
 solve1 = concat. reverse. split (oneOf "+*-/")
@@ -58,12 +57,12 @@ getIssuer number
 
 testit :: String -> String
 testit "" = ""
-testit (c:[]) = c:""
-testit xs = if (length xs `mod` 2 == 1) then prefix ++ [last xs] else prefix
+testit [c] = c:""
+testit xs = if length xs `mod` 2 == 1 then prefix ++ [last xs] else prefix
   where
     prefix =
-      map (\(c, d, i) -> chr $ (ord c + ord d) `div` 2) $
-      filter (\(c, d, i) -> i `mod` 2 == 1) $
+      map (\(c, d, _) -> chr $ (ord c + ord d) `div` 2) $
+      filter (\(_, _, i) -> odd (i :: Int)) $
       zip3 xs (tail xs) [1..]
 
 
@@ -104,8 +103,8 @@ rotate n xs = zipWith const (drop n (cycle xs)) xs
 
 
 
-
-isPrime n = length [ x | x <- [2..n - 1], n `mod` x == 0] == 0
+isPrime :: Integral a => a -> Bool
+isPrime n = null [ x | x <- [2..n - 1], even n ]
 
 
 
@@ -133,12 +132,16 @@ daysRepresented =  foldr (\(x1, x2) acc -> acc + x2 - x1 + 1) 0
 -- if in acc or in the new interval then map it to set in new acc
 
 merge :: [(Int,Int)] -> [Bool]
-merge xs = foldr (\(x1, x2) acc -> fmap (\day -> if ((acc !! (day - 1) == True)
-  || (day >= x1 && day <= x2)) then True else False) allDays) allBool xs
+merge = foldr (\(x1, x2) acc -> fmap (\day -> (acc !! (day - 1))
+  || (day >= x1 && day <= x2)) allDays) allBool
 
+
+
+allDays :: [Int]
 allDays = [1..365]
 
-allBool = take 365 $ [False, False ..]
+allBool :: [Bool]
+allBool = take 365 [False, False ..]
 
 
 -- solve :: String -> Bool
@@ -182,7 +185,7 @@ allBool = take 365 $ [False, False ..]
 -- factors n = [i | i <-[1..n-1], n `mod` i == 0]
 
 isPerfect :: Integer -> Bool
-isPerfect n = (foldr (+) 0 [i | i <-[1..n-1], n `mod` i == 0]) == n
+isPerfect n = sum [i | i <-[1..n-1], n `mod` i == 0] == n
 
 
 -- factors :: Integer -> [Integer]
@@ -192,22 +195,23 @@ isPerfect n = (foldr (+) 0 [i | i <-[1..n-1], n `mod` i == 0]) == n
 
 
 getFactors :: Int -> [Int]
-getFactors n = [1] ++ getF n
+getFactors n = 1 : getF n
 
+getF :: Integral t => t -> [t]
 getF 1 = []
 getF n =
-  case factor of
+  case fact of
     [] -> [n]
-    _  -> factor ++ getF (n `div` (head factor))
-  where factor = take 1 $ filter (\x -> (n `mod` x) == 0) [2 .. n]
+    _  -> fact ++ getF (n `div` head fact)
+  where fact = take 1 $ filter (\x -> (n `mod` x) == 0) [2 .. n]
 
-
+primeFactors :: Integral a => a -> [a]
 primeFactors n = primeFactors' n 2
   where
     primeFactors' 1 _ = []
-    primeFactors' n f
-      | n `mod` f == 0 = f : primeFactors' (n `div` f) f
-      | otherwise      = primeFactors' n (f + 1)
+    primeFactors' nn f
+      | nn `mod` f == 0 = f : primeFactors' (nn `div` f) f
+      | otherwise      = primeFactors' nn (f + 1)
 
 
 
@@ -216,8 +220,8 @@ factorList :: Int -> [Int]
 factorList value = init $ factorsGreaterOrEqual 1
   where
     factorsGreaterOrEqual test
-      | (test == value) = [value]
-      | (value `mod` test == 0) = test : restOfFactors
+      | test == value = [value]
+      | value `mod` test == 0 = test : restOfFactors
       | otherwise = restOfFactors
       where restOfFactors = factorsGreaterOrEqual (test + 1)
 
@@ -226,32 +230,16 @@ factorList value = init $ factorsGreaterOrEqual 1
 isFactorOf :: Integral a => a -> a -> Bool
 isFactorOf x n = n `mod` x == 0
 
+createList :: Integral a => a -> a -> [a]
 createList n f | f <= n `div` 2 = if f `isFactorOf` n
                                      then f : next
                                      else next
                | otherwise      = []
     where next = createList n (f + 1)
 
+factor :: Integral a => a -> [a]
 factor n = createList n 1
 
-
-
-integerFactors :: Int -> [Int]
-integerFactors n
-  | n < 1 = []
-  | otherwise =
-    lows ++
-    (quot n <$>
-     (if intSquared == n -- A perfect square,
-        then tail        -- and cofactor of square root would be redundant.
-        else id)
-       (reverse lows))
-  where
-    (intSquared, lows) =
-      (^ 2) &&& (filter ((0 ==) . rem n) . enumFromTo 1) $
-      floor (sqrt $ fromIntegral n)
-
-fct n = init $ integerFactors n
 
 
 -- module Symbols where
