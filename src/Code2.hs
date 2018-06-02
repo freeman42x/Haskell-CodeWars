@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Code2 where
 
 import           Data.Char
@@ -236,3 +238,39 @@ cartesianNeighbor x y =
 -- https://www.codewars.com/kata/first-class-function-factory/train/haskell
 factory :: Int -> [Int] -> [Int]
 factory x = map (*x)
+
+
+
+-- https://www.codewars.com/kata/compoundarray/train/haskell
+compoundArray :: [a] -> [a] -> [a]
+compoundArray [] []         = []
+compoundArray (x:xs) []     = x : compoundArray xs []
+compoundArray [] (y:ys)     = y : compoundArray [] ys
+compoundArray (x:xs) (y:ys) = x : y : compoundArray xs ys
+
+
+
+-- https://www.codewars.com/kata/scoring-tests/train/haskell
+scoreTest :: (Integral a) => [a] -> a -> a -> a -> a
+scoreTest li a b c = sum $
+  map (\case
+          0 -> a
+          1 -> b
+          2 -> -c
+          _ -> error "WAT!") li
+
+
+
+-- https://www.codewars.com/kata/weight-of-its-contents/train/haskell
+contentWeight :: Int -> String -> Int
+contentWeight weight str = round $ (t * fromIntegral weight) / (1.0 + t)
+  where t = parseTimes str
+
+parseTimes :: String -> Double
+parseTimes s = if bos == "larger" then times else 1 / times
+  where ws = words s
+        times = read $ head ws :: Double
+        bos = last ws
+
+-- t * b + b = f ---> b = f / (1 + t)
+-- c = t * b ---> c = t * f / (1 + t)
