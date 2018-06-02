@@ -6,7 +6,6 @@ import           Data.List
 import           Data.List.Split
 import           Data.Maybe
 import           Data.Ord
-import           Debug.Trace
 import           Numeric
 import           Text.Printf
 
@@ -143,8 +142,8 @@ mxdiflg s1 s2
 
 -- s 5 = [0, 1, 3, 6, 10, 15]
 
-s :: Int -> [Int]
-s n = fmap (\i -> i * signum n) $ take (abs n + 1) $ (\i -> sum [0..i]) <$> [0..]
+sw :: Int -> [Int]
+sw n = fmap (\i -> i * signum n) $ take (abs n + 1) $ (\i -> sum [0..i]) <$> [0..]
 
 
 sequenceSum :: Int -> String

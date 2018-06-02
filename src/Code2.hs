@@ -2,8 +2,6 @@ module Code2 where
 
 import           Data.Char
 import           Data.List
-import           Data.List.Split
-import           Data.Maybe
 
 
 
@@ -14,7 +12,7 @@ twoDecimalPlaces = (/100) . fromInteger . floor . (*100)
 
 strongEnough :: [[Int]] -> Int -> String
 strongEnough earthquake age
-  | 1000 * 0.99 ^^ age < fromIntegral magnitude = "Needs Reinforcement!"
+  | 1000 * (0.99 :: Double) ^^ age < fromIntegral magnitude = "Needs Reinforcement!"
   | otherwise =  "Safe!"
     where magnitude = product $ fmap sum earthquake
 
@@ -49,9 +47,9 @@ sillyCASE xs = map (\(c, i) -> if i < (length xs + 1) `div` 2
 
 
 alternateSqSum :: [Integer] -> Maybe Integer
-alternateSqSum seq
-  | null seq = Nothing
-  | otherwise = Just $ sum $ zipWith (\f x -> f x) (cycle [id, (^2)]) seq
+alternateSqSum sequ
+  | null sequ = Nothing
+  | otherwise = Just $ sum $ zipWith (\f x -> f x) (cycle [id, (^ 2)]) sequ
 
 
 
@@ -104,7 +102,7 @@ data Property = Property Bool   Bool  Bool deriving Show
                       -- prime  even  10*
 
 numberProperty :: Integral n => n -> Property
-numberProperty n = Property (isPrime n) (isEven n) (isMul10 n)
+numberProperty m = Property (isPrime m) (isEven m) (isMul10 m)
   where
     isEven n = n `mod` 2 == 0
     isMul10 n = n `mod` 10 == 0
@@ -163,7 +161,7 @@ alternateCase = map (\c -> if isUpper c then toLower c else toUpper c)
 
 
 climb :: Int -> [Int]
-climb x = go x []
+climb y = go y []
   where go x ss
           | x == 1 = x : ss
           | otherwise = go (x `div` 2) (x : ss)
@@ -180,6 +178,7 @@ amIAfraid dayOfTheWeek num =
     "Friday"    -> even num
     "Saturday"  -> num == 56
     "Sunday"    -> abs num == 666
+    _           -> error "Boom!"
 
 
 
@@ -190,8 +189,8 @@ fizzbuzz n = [ length $ filter (\i -> i `mod` 3 == 0 && i `mod` 5 /= 0) [1..n-1]
 
 
 
-pattern :: Int -> String
-pattern n
+pattern' :: Int -> String
+pattern' n
   | n < 1 = ""
   | otherwise = init $ unlines [ concatMap show [i..n] | i <- [1..n]]
 
@@ -203,7 +202,7 @@ filterNumbers = filter (not . isDigit)
 
 
 validateWord :: String -> Bool
-validateWord word = all (\c -> c == cf) $ tail cc
+validateWord word = all (== cf) $ tail cc
   where w = map toLower word
         cc = map (\c -> length $ filter (==c) w) $ nub w
         cf = head cc
@@ -211,7 +210,7 @@ validateWord word = all (\c -> c == cf) $ tail cc
 
 
 zipValidate :: String -> Bool
-zipValidate s = (length $ filter isDigit s) == 6 && head s `elem` "12346"
+zipValidate s = length (filter isDigit s) == 6 && head s `elem` "12346"
 
 
 
@@ -222,3 +221,18 @@ explode = concatMap (\c -> replicate (read [c]) c)
 
 stringCounter :: String -> Char -> Int
 stringCounter inputS charS = length $ filter (== charS) inputS
+
+
+
+-- https://www.codewars.com/kata/cartesian-neighbors/train/haskell
+cartesianNeighbor :: Int -> Int -> [(Int,Int)]
+cartesianNeighbor x y =
+  [(x - 1, y - 1), (x, y - 1), (x + 1, y - 1),
+   (x - 1,     y),             (x + 1,     y),
+   (x - 1, y + 1), (x, y + 1), (x + 1, y + 1)]
+
+
+
+-- https://www.codewars.com/kata/first-class-function-factory/train/haskell
+factory :: Int -> [Int] -> [Int]
+factory x = map (*x)
