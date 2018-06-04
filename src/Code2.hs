@@ -308,12 +308,14 @@ pattern n = intercalate "\n" $ fmap (concatMap show) $ filter (not . null) $ ini
 wallpaper :: Double -> Double -> Double -> String
 wallpaper l w h = sayNumber $ ceiling $ surfacePlus / rollSurface
   where
-    surface = 2 * l * w + 2 * l * h + 2 * w * h
+    surface = if l == 0 || w == 0 || h == 0 then 0 else 2 * (l * h + w * h)
     surfacePlus = surface * 1.15
     rollSurface = 5.2
 
 sayNumber :: Int -> String
-sayNumber n = ["", "one", "two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"] !! n
+sayNumber n = ["zero", "one", "two", "three", "four", "five", "six", "seven",
+  "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty"] !! n
 
 
 
