@@ -1,6 +1,5 @@
 module Code0 where
 
-import           Control.Arrow   ((&&&))
 import           Data.Char
 import           Data.List
 import           Data.List.Split

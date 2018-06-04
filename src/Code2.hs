@@ -4,6 +4,7 @@ module Code2 where
 
 import           Data.Char
 import           Data.List
+import           Text.Printf
 
 
 
@@ -274,3 +275,67 @@ parseTimes s = if bos == "larger" then times else 1 / times
 
 -- t * b + b = f ---> b = f / (1 + t)
 -- c = t * b ---> c = t * f / (1 + t)
+
+
+
+-- https://www.codewars.com/kata/return-string-of-first-characters/train/haskell
+makeString :: String -> String
+makeString = map head . words
+
+
+
+-- https://www.codewars.com/kata/alphabet-symmetry/train/haskell
+solve :: [String] -> [Int]
+solve = fmap sym
+  where
+    sym s = length $ filter (uncurry (==)) $ zip (fmap toLower s) ['a'..]
+
+
+
+-- https://www.codewars.com/kata/number-pairs/train/haskell
+getLargerNumbers :: Ord a => [a] -> [a] -> [a]
+getLargerNumbers = zipWith max
+
+
+
+-- https://www.codewars.com/kata/complete-the-pattern-number-3-horizontal-image-of-number-2/train/haskell
+pattern :: Int -> String
+pattern n = intercalate "\n" $ fmap (concatMap show) $ filter (not . null) $ inits [n,n-1..1]
+
+
+
+-- https://www.codewars.com/kata/easy-wallpaper/train/haskell
+wallpaper :: Double -> Double -> Double -> String
+wallpaper l w h = sayNumber $ ceiling $ surfacePlus / rollSurface
+  where
+    surface = 2 * l * w + 2 * l * h + 2 * w * h
+    surfacePlus = surface * 1.15
+    rollSurface = 5.2
+
+sayNumber :: Int -> String
+sayNumber n = ["", "one", "two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"] !! n
+
+
+
+-- https://www.codewars.com/kata/simple-beads-count/train/haskell
+countRedBeads :: Int -> Int
+countRedBeads 0 = 0
+countRedBeads n = 2 * n - 2
+
+
+
+-- https://www.codewars.com/kata/find-the-parity-outlier/train/haskell
+findOutlier :: [Int] -> Int
+findOutlier xs = head $ filter (if isEvens then odd else even) xs
+  where
+    isEvens = (length $ filter even xs) > (length $ filter odd xs)
+
+
+
+-- https://www.codewars.com/kata/human-readable-time/train/haskell
+humanReadable :: Int -> String
+humanReadable x = printf "%02d:%02d:%02d" hours minutes seconds
+  where
+    hours = x `div` 3600
+    minutes = (x - hours * 3600) `div` 60
+    seconds = x - hours * 3600 - minutes * 60

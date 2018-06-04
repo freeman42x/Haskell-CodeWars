@@ -17,8 +17,8 @@ cabal-version:       >=1.10
 
 library
   -- exposed-modules:
-  other-modules:
-    Code2
+  -- other-modules:
+
   -- other-extensions:
   build-depends:       base >=4.10 && <4.11
                      , split
