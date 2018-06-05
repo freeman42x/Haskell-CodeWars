@@ -4,6 +4,7 @@ module Code2 where
 
 import           Data.Char
 import           Data.List
+import           Data.Maybe
 import           Text.Printf
 
 
@@ -341,3 +342,26 @@ humanReadable x = printf "%02d:%02d:%02d" hours minutes seconds
     hours = x `div` 3600
     minutes = (x - hours * 3600) `div` 60
     seconds = x - hours * 3600 - minutes * 60
+
+
+
+-- https://www.codewars.com/kata/roman-numerals-encoder/train/haskell
+solution :: Integer -> String
+solution 0 = ""
+solution n = v ++ solution (n - k)
+  where
+    (k, v) = fromJust $ find (\(key, _) -> key <= n) romanToArabic
+    romanToArabic =
+      [(1000, "M")
+      ,(900, "CM")
+      ,(500, "D")
+      ,(400, "CD")
+      ,(100, "C")
+      ,(90, "XC")
+      ,(50, "L")
+      ,(40, "XL")
+      ,(10, "X")
+      ,(9, "IX")
+      ,(5, "V")
+      ,(4, "IV")
+      ,(1, "I")]
