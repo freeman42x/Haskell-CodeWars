@@ -425,3 +425,67 @@ remove = unwords . fmap (reverse . dropWhile (=='!') . reverse) . words
 -- https://www.codewars.com/kata/drying-potatoes/train/haskell
 potatoes :: Int -> Int -> Int -> Int
 potatoes p0 w0 p1 = w0 * (100 - p0) `div` (100 - p1)
+
+
+
+-- https://www.codewars.com/kata/alphabetize-a-list-by-the-nth-character/train/haskell
+sortIt :: [String] -> Int -> [String]
+sortIt xs n = sortBy f xs
+  where
+    f a b
+      | ai /= bi = ai `compare` bi
+      | otherwise = a `compare` b
+      where
+        ai = g a
+        bi = g b
+        g = (!! (n - 1))
+
+
+
+-- https://www.codewars.com/kata/character-concatenation/train/haskell
+charConcat :: String -> String
+charConcat word = go word 1
+  where
+    go [] _  = ""
+    go [_] _ = ""
+    go w n   = [head w] ++ [last w] ++ show n ++ go (init $ tail $ w) (n + 1)
+
+
+
+-- https://www.codewars.com/kata/scaling-squared-strings/train/haskell
+scale :: [Char] -> Int -> Int -> [Char]
+scale strng k n = intercalate "\n" $ concatMap (replicate n) $ fmap (concatMap (replicate k)) $ (lines strng)
+
+
+
+-- https://www.codewars.com/kata/figurate-numbers-number-2-pronic-number/train/haskell
+isPronic :: Integer -> Bool
+isPronic k = k == n * (n + 1)
+  where
+    n = floor $ sqrt $ fromIntegral k
+
+
+
+-- https://www.codewars.com/kata/find-the-lucky-numbers/train/haskell
+filterLucky :: [Int] -> [Int]
+filterLucky = filter (('7' `elem`) . show)
+
+
+
+-- https://www.codewars.com/kata/word-values/train/haskell
+wordValue :: [[Char]] -> [Int]
+wordValue = zipWith (\i s -> sumW s * i) [1..]
+  where
+    sumW = sum . fmap (\c -> if c == ' ' then 0 else ord c - ord 'a' + 1)
+
+
+
+-- https://www.codewars.com/kata/count-consonants/train/haskell
+consonantCount :: String -> Int
+consonantCount = length . filter (\c -> isLetter c && (not $ c `elem` "aeiouAEIOU"))
+
+
+
+-- https://www.codewars.com/kata/hamming-distance-part-1-binary-codes/train/haskell
+hammingDistance :: String -> String -> Int
+hammingDistance xs ys = sum $ zipWith (\a b -> if a == b then 0 else 1) xs ys
