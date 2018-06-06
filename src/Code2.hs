@@ -350,8 +350,8 @@ solution :: Integer -> String
 solution 0 = ""
 solution n = v ++ solution (n - k)
   where
-    (k, v) = fromJust $ find (\(key, _) -> key <= n) romanToArabic
-    romanToArabic =
+    (k, v) = fromJust $ find (\(key, _) -> key <= n) arabicToRoman
+    arabicToRoman =
       [(1000, "M")
       ,(900, "CM")
       ,(500, "D")
@@ -365,3 +365,63 @@ solution n = v ++ solution (n - k)
       ,(5, "V")
       ,(4, "IV")
       ,(1, "I")]
+
+
+
+-- https://www.codewars.com/kata/find-the-divisors/train/haskell
+divisors :: (Show a, Integral a) => a -> Either String [a]
+divisors a = case [i | i <-[2..a `div` 2], a `mod` i == 0] of
+              [] -> Left $ show a ++ " is prime"
+              xs -> Right xs
+
+
+
+-- https://www.codewars.com/kata/palindrome-chain-length/train/haskell
+palindromeChainLength :: Integer -> Integer
+palindromeChainLength n = go n 0
+  where
+    isPalindrome m = let s = show m in s == reverse s
+    step m = let s = show m in m + (read $ reverse s)
+    go m pcl = if isPalindrome m then pcl else go (step m) (pcl + 1)
+
+
+
+-- https://www.codewars.com/kata/tube-strike-options-calculator/train/haskell
+data Decision = Bus | Walk deriving (Eq, Show)
+calculator :: Double   -- ^ the distance you would have to walk
+           -> Double   -- ^ the distance the bus would travel
+           -> Double   -- ^ the distance you have to *walk* to the bus
+           -> Decision -- ^ your decision whether to take the Bus or Walk
+calculator distance busDrive busWalk =
+  if walkTime <= 2 && (walkTime < 1 / 6 || walkTime <= busTime) then Walk else Bus
+  where
+    walkTime = distance / 5
+    busTime = busWalk / 5 + busDrive / 8
+
+
+
+-- https://www.codewars.com/kata/the-fusc-function-part-1/train/haskell
+fusc :: Int -> Int
+fusc n
+  | n == 0 = 0
+  | n == 1 = 1
+  | even n = fusc $ n `div` 2
+  | otherwise = fusc (n `div` 2) + fusc (n `div` 2 + 1)
+
+
+
+-- https://www.codewars.com/kata/filter-coffee/train/haskell
+search :: Int -> [Int] -> String
+search budget = intercalate "," . fmap show . sort . filter (<= budget)
+
+
+
+-- https://www.codewars.com/kata/exclamation-marks-series-number-5-remove-all-exclamation-marks-from-the-end-of-words/train/haskell
+remove :: String -> String
+remove = unwords . fmap (reverse . dropWhile (=='!') . reverse) . words
+
+
+
+-- https://www.codewars.com/kata/drying-potatoes/train/haskell
+potatoes :: Int -> Int -> Int -> Int
+potatoes p0 w0 p1 = w0 * (100 - p0) `div` (100 - p1)
