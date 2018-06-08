@@ -4,12 +4,12 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, split, stdenv }:
+  f = { mkDerivation, base, containers, split, stdenv }:
       mkDerivation {
         pname = "CodeWars";
         version = "0.1.0.0";
         src = ./.;
-        libraryHaskellDepends = [ base split ];
+        libraryHaskellDepends = [ base containers split ];
         license = stdenv.lib.licenses.mit;
       };
 

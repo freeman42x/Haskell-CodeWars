@@ -3,6 +3,8 @@ module Code3 where
 import           Data.Bits
 import           Data.Char
 import           Data.List
+import           Data.List.Split
+import qualified Data.Map        as M
 import           Data.Ord
 
 
@@ -75,3 +77,12 @@ duplicateCount = length . filter (\s -> length s > 1) . group . sort . map toLow
 -- https://www.codewars.com/kata/your-order-please/train/haskell
 yourOrderPlease :: String -> String
 yourOrderPlease = unwords . sortBy (comparing (head . filter isDigit)) . words
+
+
+
+-- https://www.codewars.com/kata/decode-the-morse-code/train/haskell
+morseCodes :: M.Map String String
+morseCodes = M.fromList [("-","T"),("--","M"),("---","O"),("-----","0"),("----.","9"),("---..","8"),("---...",":"),("--.","G"),("--.-","Q"),("--..","Z"),("--..--",","),("--...","7"),("-.","N"),("-.-","K"),("-.--","Y"),("-.--.","("),("-.--.-",")"),("-.-.","C"),("-.-.--","!"),("-.-.-.",";"),("-..","D"),("-..-","X"),("-..-.","/"),("-...","B"),("-...-","="),("-....","6"),("-....-","-"),(".","E"),(".-","A"),(".--","W"),(".---","J"),(".----","1"),(".----.","'"),(".--.","P"),(".--.-.","@"),(".-.","R"),(".-.-.","+"),(".-.-.-","."),(".-..","L"),(".-..-.","\""),(".-...","&"),("..","I"),("..-","U"),("..---","2"),("..--.-","_"),("..--..","?"),("..-.","F"),("...","S"),("...-","V"),("...--","3"),("...---...","SOS"),("...-..-","$"),("....","H"),("....-","4"),(".....","5")]
+
+decodeMorse :: String -> String
+decodeMorse str = unwords $ concatMap (\st -> if st == "" then "" else morseCodes M.! st) . splitOn " " <$> splitOn "   " str
