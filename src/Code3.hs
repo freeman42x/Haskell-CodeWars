@@ -2,11 +2,12 @@ module Code3 where
 
 import           Data.Bits
 import           Data.Char
-import           Data.List
+import           Data.List       hiding (dropWhile)
 import           Data.List.Split
 import qualified Data.Map        as M
 import           Data.Ord
 import           Data.Text       (pack, strip, unpack)
+import           Prelude         hiding (dropWhile)
 
 
 
@@ -87,3 +88,75 @@ morseCodes = M.fromList [("-","T"),("--","M"),("---","O"),("-----","0"),("----."
 
 decodeMorse :: String -> String
 decodeMorse str = unwords $ concatMap (\st -> morseCodes M.! st) . splitOn " " <$> splitOn "   " (unpack $ strip $ pack str)
+
+
+
+-- https://www.codewars.com/kata/fizz-buzz-cuckoo-clock/train/haskell
+fizzBuzzCuckooClock :: String -> String
+fizzBuzzCuckooClock time
+  | m == 30 = "Cuckoo"
+  | m == 0 = unwords $ replicate (if h > 12 then h - 12 else if h == 0 then 12 else h) "Cuckoo"
+  | m `mod` 15 == 0 = "Fizz Buzz"
+  | m `mod` 5 == 0 = "Buzz"
+  | m `mod` 3 == 0 = "Fizz"
+  | otherwise = "tick"
+  where
+    [h, m] = (\x -> read x :: Int) <$> splitOn ":" time
+
+
+
+-- https://www.codewars.com/kata/excel-sheet-column-numbers/train/haskell
+titleToNb :: String -> Integer
+titleToNb title = sum $ zipWith (\a b -> toInteger (ord a - 64) * toInteger 26 ^ b) title (reverse [0..length title - 1])
+
+
+
+-- https://www.codewars.com/kata/8-towers/train/haskell
+towerCombination :: Integer -> Integer
+towerCombination n = product [1..n]
+
+
+
+-- https://www.codewars.com/kata/how-many-twos/train/haskell
+twoCount :: Int -> Int
+twoCount n = go n 0
+  where
+    go m c
+      | even m = go (m `div` 2) (c + 1)
+      | otherwise = c
+
+
+
+-- https://www.codewars.com/kata/thinkful-string-drills-repeater/train/haskell
+repeater :: String -> Int -> String
+repeater string n = concat $ replicate n string
+
+
+
+-- https://www.codewars.com/kata/how-many-are-smaller-than-me/train/haskell
+smaller :: Ord a => [a] -> [Int]
+smaller xs = zipWith (\x i -> length $ filter (<x) $ drop i xs ) xs [0..]
+
+
+
+-- https://www.codewars.com/kata/the-dropwhile-function/train/haskell
+dropWhile :: [a] -> (a -> Bool) -> [a]
+dropWhile [] _     = []
+dropWhile (x:xs) p = if p x then dropWhile xs p else x:xs
+
+
+-- https://www.codewars.com/kata/herons-formula-1/train/haskell
+heron :: Double -> Double -> Double -> Double
+heron a b c = sqrt (s * (s - a) * (s - b) * (s - c))
+  where s = (a + b + c) / 2
+
+
+-- https://www.codewars.com/kata/factorial-1/train/haskell
+factorial :: Integer -> Integer
+factorial n = product [1..n]
+
+
+
+-- https://www.codewars.com/kata/exclamation-marks-series-number-3-remove-all-exclamation-marks-from-sentence-except-at-the-end/train/haskell
+remove :: String -> String
+remove s = filter (/='!') s ++ takeWhile (=='!') (reverse s)
