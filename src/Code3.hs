@@ -5,6 +5,7 @@ import           Data.Char
 import           Data.List       hiding (dropWhile)
 import           Data.List.Split
 import qualified Data.Map        as M
+import           Data.Maybe
 import           Data.Ord
 import           Data.Text       (pack, strip, unpack)
 import           Prelude         hiding (dropWhile)
@@ -160,3 +161,17 @@ factorial n = product [1..n]
 -- https://www.codewars.com/kata/exclamation-marks-series-number-3-remove-all-exclamation-marks-from-sentence-except-at-the-end/train/haskell
 remove :: String -> String
 remove s = filter (/='!') s ++ takeWhile (=='!') (reverse s)
+
+
+
+-- https://www.codewars.com/kata/playing-with-digits/train/haskell
+digpow :: Integer -> Integer -> Integer
+digpow n p = if s `mod` n == 0 then s `div` n else -1
+  where
+    s = sum $ zipWith (\a b -> toInteger (digitToInt a) ^ b) (show n) [p..]
+
+
+
+-- https://www.codewars.com/kata/equal-sides-of-an-array/train/haskell
+findEvenIndex :: [Int] -> Int
+findEvenIndex arr = fromMaybe (-1) $ elemIndex 0 $ fmap (\i -> sum (take i arr) - sum (drop (i + 1) arr)) [0..length arr - 1]
