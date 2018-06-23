@@ -175,3 +175,23 @@ digpow n p = if s `mod` n == 0 then s `div` n else -1
 -- https://www.codewars.com/kata/equal-sides-of-an-array/train/haskell
 findEvenIndex :: [Int] -> Int
 findEvenIndex arr = fromMaybe (-1) $ elemIndex 0 $ fmap (\i -> sum (take i arr) - sum (drop (i + 1) arr)) [0..length arr - 1]
+
+
+
+-- https://www.codewars.com/kata/build-a-pile-of-cubes/train/haskell
+findNb :: Integer -> Integer
+findNb m
+    | div (root * (root + 1)) 2 ^ 2 == m = root
+    | otherwise = -1
+    where
+        intSqrt = floor . sqrt . fromIntegral
+        root = intSqrt (intSqrt m * 2)
+
+-- findNb :: Integer -> Integer
+-- findNb m = f 1
+--   where
+--     s i = (i * (i + 1)) ^ 2 `div` 4
+--     f i
+--       | s i > m = -1
+--       | s i == m = i
+--       | otherwise = f (i + 1)
