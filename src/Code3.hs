@@ -252,3 +252,10 @@ narcissistic n = fromIntegral n == sum (fmap (\i -> digitToInt i ^ length ns) ns
 -- https://www.codewars.com/kata/which-are-in/train/haskell
 inArray :: [String] -> [String] -> [String]
 inArray a1 a2 = sort $ nub $ filter (\s -> any (isInfixOf s) a2) a1
+
+
+
+-- https://www.codewars.com/kata/find-the-missing-letter/train/haskell
+findMissingLetter :: String -> Char
+findMissingLetter "" = error "should never happen"
+findMissingLetter cs@(c:_) = snd $ fromJust $ find (uncurry (/=)) $ zip cs [c..]
