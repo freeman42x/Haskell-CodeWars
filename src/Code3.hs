@@ -1,14 +1,16 @@
 module Code3 where
 
+import           Control.Lens.Cons
+import           Control.Lens.Fold
 import           Data.Bits
 import           Data.Char
-import           Data.List       hiding (dropWhile)
+import           Data.List         hiding (dropWhile)
 import           Data.List.Split
-import qualified Data.Map        as M
+import qualified Data.Map          as M
 import           Data.Maybe
 import           Data.Ord
-import           Data.Text       (pack, strip, unpack)
-import           Prelude         hiding (dropWhile)
+import           Data.Text         (pack, strip, unpack)
+import           Prelude           hiding (dropWhile)
 
 
 
@@ -195,3 +197,58 @@ findNb m
 --       | s i > m = -1
 --       | s i == m = i
 --       | otherwise = f (i + 1)
+
+
+
+-- https://www.codewars.com/kata/is-a-number-prime/train/haskell
+isPrime :: Integer -> Bool
+isPrime x
+  | x `elem` [0, 1] = False
+  | otherwise = null [i | i <- [2.. floor $ sqrt $ fromInteger x], x `mod` i == 0]
+
+
+
+-- https://www.codewars.com/kata/convert-string-to-camel-case/train/haskell
+toCamelCase :: String -> String
+toCamelCase str = concat $ zipWith (\a b -> if b == 0 then a else capitalize a) (splitOneOf "_-" str) [0..]
+  where
+    capitalize :: String -> String
+    capitalize ""     = ""
+    capitalize (x:xs) = toUpper x : xs
+
+
+
+-- https://www.codewars.com/kata/are-they-the-same/train/haskell
+comp :: [Integer] -> [Integer] -> Bool
+comp as bs
+  | length as == length bs = null $ ((^2) <$> as) \\ bs
+  | otherwise = False
+
+
+
+-- https://www.codewars.com/kata/consecutive-strings/train/haskell
+longestConsec :: [String] -> Int -> String
+longestConsec strarr k =
+  head $
+  fromMaybe [""] $
+  listToMaybe $
+  reverse $
+  groupBy (\a b -> length a == length b) $
+  sortOn length $
+  fmap concat $
+  filter (\x -> length x == k) $
+  take k <$> tails strarr
+
+
+
+-- https://www.codewars.com/kata/does-my-number-look-big-in-this/train/haskell
+narcissistic :: Integral n => n -> Bool
+narcissistic n = fromIntegral n == sum (fmap (\i -> digitToInt i ^ length ns) ns)
+  where
+    ns = show $ fromIntegral n
+
+
+
+-- https://www.codewars.com/kata/which-are-in/train/haskell
+inArray :: [String] -> [String] -> [String]
+inArray a1 a2 = sort $ nub $ filter (\s -> any (isInfixOf s) a2) a1
