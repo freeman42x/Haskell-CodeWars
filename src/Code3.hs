@@ -1,16 +1,14 @@
 module Code3 where
 
-import           Control.Lens.Cons
-import           Control.Lens.Fold
 import           Data.Bits
 import           Data.Char
-import           Data.List         hiding (dropWhile)
+import           Data.List       hiding (dropWhile)
 import           Data.List.Split
-import qualified Data.Map          as M
+import qualified Data.Map        as M
 import           Data.Maybe
 import           Data.Ord
-import           Data.Text         (pack, strip, unpack)
-import           Prelude           hiding (dropWhile)
+import           Data.Text       (pack, strip, unpack)
+import           Prelude         hiding (dropWhile)
 
 
 
@@ -307,3 +305,119 @@ toWeirdCase = unwords . fmap f . words
 -- https://www.codewars.com/kata/build-tower/train/haskell
 buildTower :: Int -> [String]
 buildTower n = fmap (\i -> replicate (n - i - 1) ' ' ++ replicate (2 * i + 1) '*' ++ replicate (n - i - 1) ' ') [0..n - 1]
+
+
+
+-- https://www.codewars.com/kata/split-strings/train/haskell
+solution1 :: String -> [String]
+solution1 []       = []
+solution1 [x]      = [x:"_"]
+solution1 (x:y:ys) = (x:[y]) : solution1 ys
+
+
+
+-- https://www.codewars.com/kata/sort-the-odd/train/haskell
+sortArray :: [Int] -> [Int]
+sortArray xs = snd $ foldl (\(oddf, res) a -> if even a then (oddf, res ++ [a]) else (tail oddf, res ++ [head oddf])) (oddfo, []) xs
+  where
+    oddfo = sort $ filter odd xs
+
+
+
+-- https://www.codewars.com/kata/take-a-number-and-sum-its-digits-raised-to-the-consecutive-powers-and-dot-dot-dot-eureka/train/haskell
+sumDigPow :: Int -> Int -> [Int]
+sumDigPow a b = filter p [a..b]
+  where
+    p n = n == sum (zipWith (\m i -> digitToInt m ^ i) (show n) [1..])
+
+
+
+-- https://www.codewars.com/kata/tortoise-racing/train/haskell
+race :: Int -> Int -> Int -> Maybe (Int, Int, Int)
+race v1 v2 g
+  | v1 >= v2 = Nothing
+  | otherwise = Just (h, m, s)
+    where
+      seconds = (3600 * g) `div` (v2 - v1)
+      h = seconds `div` 3600
+      m = (seconds - h * 3600) `div` 60
+      s = seconds - h * 3600 - m * 60
+
+
+
+-- https://www.codewars.com/kata/bouncing-balls/train/haskell
+bouncingBall :: Double -> Double -> Double -> Integer
+bouncingBall h bounce window
+  | h > 0 && bounce > 0 && bounce < 1 && window < h = toInteger $ slength $ takeWhile (>= window) $ iterate (* bounce) h
+  | otherwise = -1
+    where
+      slength x = (length x - 1) * 2 + 1
+
+
+
+-- https://www.codewars.com/kata/roman-numerals-decoder/train/haskell
+solution :: String -> Int
+solution "" = 0
+solution s = v + solution (drop (length k) s)
+  where
+    (k, v) = fromJust $ find (\(key, _) -> key == take (length key) s) romanToArabic
+    romanToArabic =
+      [("M", 1000)
+      ,("CM", 900)
+      ,("D", 500)
+      ,("CD", 400)
+      ,("C", 100)
+      ,("XC", 90)
+      ,("L", 50)
+      ,("XL", 40)
+      ,("X", 10)
+      ,("IX", 9)
+      ,("V", 5)
+      ,("IV", 4)
+      ,("I", 1)]
+
+
+
+-- https://www.codewars.com/kata/write-number-in-expanded-form/train/haskell
+expandedForm :: Int -> String
+expandedForm n = intercalate " + " $
+  filter (/= "0") $
+  zipWith (\a b -> show $ digitToInt a * 10 ^ b) sn [length sn - 1, length sn - 2..0]
+  where
+    sn = show n
+
+
+
+-- https://www.codewars.com/kata/detect-pangram/train/haskell
+isPangram :: String -> Bool
+isPangram str = ['a'..'z'] == sort (nub $ toLower <$> filter isLetter str)
+
+
+
+-- https://www.codewars.com/kata/valid-phone-number/train/haskell
+validPhoneNumber :: String -> Bool
+validPhoneNumber s =
+  length s == 14 &&
+  head s == '(' &&
+  isDigit (s !! 1) &&
+  isDigit (s !! 2) &&
+  isDigit (s !! 3) &&
+  s !! 4 == ')' &&
+  s !! 5 == ' ' &&
+  isDigit (s !! 6) &&
+  isDigit (s !! 7) &&
+  isDigit (s !! 8) &&
+  s !! 9 == '-' &&
+  isDigit (s !! 10) &&
+  isDigit (s !! 11) &&
+  isDigit (s !! 12) &&
+  isDigit (s !! 13)
+
+
+
+-- https://www.codewars.com/kata/simple-encryption-number-1-alternating-split/train/haskell
+encrypt :: String -> Int -> String
+encrypt s i = undefined
+
+decrypt :: String -> Int -> String
+decrypt s i = undefined
