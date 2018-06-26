@@ -259,3 +259,37 @@ inArray a1 a2 = sort $ nub $ filter (\s -> any (isInfixOf s) a2) a1
 findMissingLetter :: String -> Char
 findMissingLetter "" = error "should never happen"
 findMissingLetter cs@(c:_) = snd $ fromJust $ find (uncurry (/=)) $ zip cs [c..]
+
+
+
+-- https://www.codewars.com/kata/valid-braces/train/haskell
+validBraces :: String -> Bool
+validBraces xxs = go xxs ""
+  where
+    go [] ss
+      | null ss = True
+      | otherwise = False
+    go (x:xs) []
+      | x `elem` "{[(" = go xs [x]
+      | otherwise = False
+    go (x:xs) (s:ss)
+      | x `elem` "{[(" = go xs (x:s:ss)
+      | x `elem` ")]}" = s : [x] `elem` ["{}", "[]", "()"] && go xs ss
+      | otherwise = False
+
+
+
+-- https://www.codewars.com/kata/checking-groups/train/haskell
+groupCheck :: String -> Bool
+groupCheck xss = null $ foldl' f [] xss
+  where
+    f ('(':xs) ')' = xs
+    f ('[':xs) ']' = xs
+    f ('{':xs) '}' = xs
+    f xs x         = x:xs
+
+
+
+-- https://www.codewars.com/kata/delete-occurrences-of-an-element-if-it-occurs-more-than-n-times/train/haskell
+deleteNth :: [Int] -> Int -> [Int]
+deleteNth lst n = foldl (\acc x -> if length (filter (==x) acc) >= n then acc else acc ++ [x]) [] lst
