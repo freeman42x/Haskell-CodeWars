@@ -293,3 +293,17 @@ groupCheck xss = null $ foldl' f [] xss
 -- https://www.codewars.com/kata/delete-occurrences-of-an-element-if-it-occurs-more-than-n-times/train/haskell
 deleteNth :: [Int] -> Int -> [Int]
 deleteNth lst n = foldl (\acc x -> if length (filter (==x) acc) >= n then acc else acc ++ [x]) [] lst
+
+
+
+-- https://www.codewars.com/kata/weird-string-case/train/haskell
+toWeirdCase :: String -> String
+toWeirdCase = unwords . fmap f . words
+  where
+    f = zipWith (\a b -> if even a then toUpper b else toLower b) [0..]
+
+
+
+-- https://www.codewars.com/kata/build-tower/train/haskell
+buildTower :: Int -> [String]
+buildTower n = fmap (\i -> replicate (n - i - 1) ' ' ++ replicate (2 * i + 1) '*' ++ replicate (n - i - 1) ' ') [0..n - 1]
