@@ -417,7 +417,51 @@ validPhoneNumber s =
 
 -- https://www.codewars.com/kata/simple-encryption-number-1-alternating-split/train/haskell
 encrypt :: String -> Int -> String
-encrypt s i = undefined
+encrypt s i
+  | i > 0 = iterate enc s !! i
+  | otherwise = s
+
+enc :: String -> String
+enc s = str odd ++ str even
+  where
+    str f = fmap fst $ filter (\(_,i) -> f i) $ zip s [0..]
 
 decrypt :: String -> Int -> String
-decrypt s i = undefined
+decrypt s i
+  | i > 0 = iterate dec s !! i
+  | otherwise = s
+
+dec :: String -> String
+dec s = concat (zipWith (\a b -> b : [a]) (take lh s) (drop lh s)) ++ lst
+  where
+    lh = length s `div` 2
+    lst = if odd $ length s then [last s] else ""
+
+
+
+-- https://www.codewars.com/kata/reverse-polish-notation-calculator/train/haskell
+data Term
+  = Term Double
+  | TermOp (Double -> Double -> Double)
+
+calc :: String -> Double
+calc s
+  | s /= "" = head $ evalTerms $ map mkTerm $ words s
+  | otherwise = 0
+
+mkTerm :: String -> Term
+mkTerm termStr = case termStr of
+  "+" -> TermOp (+)
+  "-" -> TermOp (-)
+  "*" -> TermOp (*)
+  "/" -> TermOp (/)
+  _   -> Term $ read termStr
+
+evalTerms :: [Term] -> [Double]
+evalTerms = foldl modifyStack []
+  where
+    modifyStack stack term = case term of
+      Term n -> n : stack
+      TermOp op -> case stack of
+        (a:b:_) -> op b a : drop 2 stack
+        _       -> error "stack too small for operator application"
