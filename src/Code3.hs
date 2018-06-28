@@ -465,3 +465,35 @@ evalTerms = foldl modifyStack []
       TermOp op -> case stack of
         (a:b:_) -> op b a : drop 2 stack
         _       -> error "stack too small for operator application"
+
+
+
+-- https://www.codewars.com/kata/rectangle-into-squares/train/haskell
+squaresInRect :: Integer -> Integer -> Maybe [Integer]
+squaresInRect ol1 ol2
+  | ol1 == ol2 = Nothing
+  | otherwise = go ol1 ol2 []
+  where
+    go _ 0 r = Just r
+    go l1 l2 r = go nl1 nl2 (r ++ [nl1])
+      where
+        nl1 = min l1 l2
+        nl2 = abs (l1 - l2)
+
+
+
+-- https://www.codewars.com/kata/pascals-triangle/train/haskell
+pascalsTriangle :: Int -> [Int]
+pascalsTriangle n = concat $ take n pascal
+
+zapWith :: (a -> a -> a) -> [a] -> [a] -> [a]
+zapWith _ xs []         = xs
+zapWith _ [] ys         = ys
+zapWith f (x:xs) (y:ys) = f x y : zapWith f xs ys
+
+extendWith :: (a -> a -> a) -> [a] -> [a]
+extendWith _ []        = []
+extendWith f xs@(x:ys) = x : zapWith f xs ys
+
+pascal :: [[Int]]
+pascal = iterate (extendWith (+)) [1]
