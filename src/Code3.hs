@@ -356,9 +356,9 @@ bouncingBall h bounce window
 
 
 -- https://www.codewars.com/kata/roman-numerals-decoder/train/haskell
-solution :: String -> Int
-solution "" = 0
-solution s = v + solution (drop (length k) s)
+solution2 :: String -> Int
+solution2 "" = 0
+solution2 s = v + solution2 (drop (length k) s)
   where
     (k, v) = fromJust $ find (\(key, _) -> key == take (length key) s) romanToArabic
     romanToArabic =
