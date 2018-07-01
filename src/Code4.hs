@@ -130,3 +130,35 @@ abbr :: String -> String
 abbr s
   | length s > 3 = [head s] ++ show (length s - 2) ++ [last s]
   | otherwise = s
+
+
+
+-- https://www.codewars.com/kata/longest-palindrome/train/haskell
+longestPalindrome :: Eq a => [a] -> Int
+longestPalindrome xss = length $ last $ sortOn length $ filter (\xs -> xs == reverse xs) $ allSublists xss
+  where
+    allSublists = concat . map tails . inits
+
+
+
+-- https://www.codewars.com/kata/fibonacci-tribonacci-and-friends/train/haskell
+xbonacci :: Num a => [a] -> Int -> [a]
+xbonacci as n = go as
+  where
+    sz = length as
+    go az
+      | length az > n = take n az
+      | length az == n = az
+      | otherwise = go $ az ++ [sum $ drop (length az - sz) az]
+
+
+
+-- https://www.codewars.com/kata/help-the-bookseller/train/haskell
+data Stock = Stock String Int
+
+stocklist :: [Stock] -> [Char] -> [(Char, Int)]
+stocklist st cs
+  | null st || null cs = []
+  | otherwise = fmap (\c -> (c, m M.! c)) cs
+  where
+    m = M.unionsWith (+) (M.fromList.pure <$> (zip cs (repeat 0) ++ ((\(Stock c v) -> (head c, v)) <$> st)))
