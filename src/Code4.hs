@@ -162,3 +162,42 @@ stocklist st cs
   | otherwise = fmap (\c -> (c, m M.! c)) cs
   where
     m = M.unionsWith (+) (M.fromList.pure <$> (zip cs (repeat 0) ++ ((\(Stock c v) -> (head c, v)) <$> st)))
+
+
+
+-- https://www.codewars.com/kata/playing-with-passphrases/train/haskell
+playPass :: String  -> Int -> String
+playPass s n = reverse $ zipWith (\g x -> g x) (cycle [toUpper, toLower]) (f <$> s)
+  where
+    f c
+      | isLetter c = chr $ ord 'A' + ((ord c - ord 'A' + n) `mod` 26)
+      | isDigit c = intToDigit $ 9 - digitToInt c
+      | otherwise = c
+
+
+
+-- https://www.codewars.com/kata/base-conversion/train/haskell
+newtype Alphabet = Alphabet { getDigits :: [Char] } deriving (Show)
+bin, oct, dec, hex, alphaLower, alphaUpper, alpha, alphaNumeric :: Alphabet
+bin = Alphabet $ "01"
+oct = Alphabet $ ['0'..'7']
+dec = Alphabet $ ['0'..'9']
+hex = Alphabet $ ['0'..'9'] ++ ['a'..'f']
+alphaLower    = Alphabet $ ['a'..'z']
+alphaUpper    = Alphabet $ ['A'..'Z']
+alpha         = Alphabet $ ['a'..'z'] ++ ['A'..'Z']
+alphaNumeric  = Alphabet $ ['0'..'9'] ++ ['a'..'z'] ++ ['A'..'Z']
+
+convert :: Alphabet -> Alphabet -> String -> String
+convert (Alphabet a) (Alphabet b) x = convFrom10 (convTo10 (Alphabet a) x) (Alphabet b)
+
+convTo10 :: Alphabet -> String -> Int
+convTo10 (Alphabet a) x = sum $
+  zipWith (\p q -> (fromJust $ elemIndex p a) * ((length a) ^ q))
+  x (reverse $ take (length x) [0..])
+
+convFrom10 :: Int -> Alphabet -> String
+convFrom10 x (Alphabet b) = (\c -> b !! c) <$> go x []
+  where
+    go 0 xs  = (if null xs then [0] else []) ++ xs
+    go xx xs = go (xx `div` (length b)) ((xx `mod` (length b)) : xs)
