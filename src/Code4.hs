@@ -191,13 +191,42 @@ alphaNumeric  = Alphabet $ ['0'..'9'] ++ ['a'..'z'] ++ ['A'..'Z']
 convert :: Alphabet -> Alphabet -> String -> String
 convert (Alphabet a) (Alphabet b) x = convFrom10 (convTo10 (Alphabet a) x) (Alphabet b)
 
-convTo10 :: Alphabet -> String -> Int
+convTo10 :: Alphabet -> String -> Integer
 convTo10 (Alphabet a) x = sum $
-  zipWith (\p q -> (fromJust $ elemIndex p a) * ((length a) ^ q))
+  zipWith (\p q -> (toInteger $ fromJust $ elemIndex p a) * ((toInteger $ length a) ^ q))
   x (reverse $ take (length x) [0..])
 
-convFrom10 :: Int -> Alphabet -> String
-convFrom10 x (Alphabet b) = (\c -> b !! c) <$> go x []
+convFrom10 :: Integer -> Alphabet -> String
+convFrom10 x (Alphabet b) = (\c -> b !! (fromInteger c)) <$> go x []
   where
+    go :: Integer -> [Integer] -> [Integer]
     go 0 xs  = (if null xs then [0] else []) ++ xs
-    go xx xs = go (xx `div` (length b)) ((xx `mod` (length b)) : xs)
+    go xx xs = go (xx `div` (toInteger $ length b)) ((xx `mod` (toInteger $ length b)) : xs)
+
+
+
+-- https://www.codewars.com/kata/fold-an-array/train/haskell
+foldList :: [Int] -> Int -> [Int]
+foldList xs n = last $ take (n + 1) $ iterate foldOnce xs
+  where
+    foldOnce ys = zipWith (+) firstHalf secondHalf
+      where
+        firstHalf = take firstHalfLength ys
+        secondHalf = reverse $ (if odd $ length ys then [0] else []) ++ drop firstHalfLength ys
+        firstHalfLength = length ys `div` 2 + if odd $ length ys then 1 else 0
+
+
+
+-- https://www.codewars.com/kata/buying-a-car/train/haskell
+nbMonths :: Integer -> Integer -> Integer -> Double -> [Integer]
+nbMonths startPriceOld startPriceNew savingperMonth percentLossByMonth =
+  (\(_1, _2, _3, _, _5) -> [_5, round $ _2 + _3 - _1]) <$>
+  fromJust $
+  find (\(_1, _2, _3, _, _) -> _2 + _3 >= _1) $
+  scanl (\(_1, _2, _3, _4, _5) a ->
+      let
+        perc = if a then _4 + 0.5 else _4
+        decRatio = 1 - perc / 100
+      in
+        (_1 * decRatio, _2 * decRatio, _3 + fromIntegral savingperMonth, perc, _5 + 1))
+    (fromIntegral $ startPriceNew, fromIntegral $ startPriceOld, 0, percentLossByMonth, 0) (cycle [False, True])
