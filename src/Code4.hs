@@ -230,3 +230,16 @@ nbMonths startPriceOld startPriceNew savingperMonth percentLossByMonth =
       in
         (_1 * decRatio, _2 * decRatio, _3 + fromIntegral savingperMonth, perc, _5 + 1))
     (fromIntegral $ startPriceNew, fromIntegral $ startPriceOld, 0, percentLossByMonth, 0) (cycle [False, True])
+
+
+
+-- https://www.codewars.com/kata/a-rule-of-divisibility-by-13/train/haskell
+thirt :: Integer -> Integer
+thirt n
+  | n == step n = n
+  | otherwise = thirt $ step n
+  where
+    step m = toInteger $ sum $ zipWith (*) xs ys
+      where
+        xs = digitToInt <$> (reverse $ show m)
+        ys = cycle [1, 10, 9, 12, 3, 4]
