@@ -277,3 +277,14 @@ isTriangleNumber number = root ^ 2 == n
   where
     n =  8 * number + 1
     root = floor $ sqrt $ fromIntegral n
+
+
+
+-- https://www.codewars.com/kata/calculate-string-rotation/train/haskell
+shiftedDiff :: String -> String -> Int
+shiftedDiff a b = go a 0
+  where
+    go str s
+      | str == b = s
+      | s == length b = -1
+      | otherwise = go (last str : init str) (s + 1)
