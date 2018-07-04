@@ -1,5 +1,6 @@
 module Code4 where
 
+import           Data.Array
 import           Data.Char
 import           Data.List
 import           Data.List.Split
@@ -243,3 +244,36 @@ thirt n
       where
         xs = digitToInt <$> (reverse $ show m)
         ys = cycle [1, 10, 9, 12, 3, 4]
+
+
+
+-- https://www.codewars.com/kata/sum-consecutives/train/haskell
+sumConsecutives :: [Int] -> [Int]
+sumConsecutives = fmap sum . group
+
+
+
+-- https://www.codewars.com/kata/grouped-by-commas/train/haskell
+groupByCommas :: Int -> String
+groupByCommas = intercalate "," . groups . reverse . show
+
+groups :: String -> [String]
+groups str = go str []
+  where
+    go "" xs = xs
+    go s xs  = go (drop 3 s) ((reverse $ take 3 s) : xs)
+
+
+
+-- https://www.codewars.com/kata/find-the-mine/train/haskell
+mineLocation :: Array (Int, Int) Int -> Maybe (Int, Int)
+mineLocation = fmap (\((x, y), _) -> (x,y)) . find (\((_, _), x) -> x == 1) . assocs
+
+
+
+-- https://www.codewars.com/kata/triangle-number-check/train/haskell
+isTriangleNumber :: Integer -> Bool
+isTriangleNumber number = root ^ 2 == n
+  where
+    n =  8 * number + 1
+    root = floor $ sqrt $ fromIntegral n
