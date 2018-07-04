@@ -288,3 +288,29 @@ shiftedDiff a b = go a 0
       | str == b = s
       | s == length b = -1
       | otherwise = go (last str : init str) (s + 1)
+
+
+
+-- https://www.codewars.com/kata/adding-ordinal-indicator-suffixes-to-numbers/train/haskell
+numberToOrdinal :: Int -> String
+numberToOrdinal n = show n ++ suffix
+  where
+    suffix
+      | n == 0 = ""
+      | (n `mod` 100) `elem` [11..13] = "th"
+      | n `mod` 10 == 1 = "st"
+      | n `mod` 10 == 2 = "nd"
+      | n `mod` 10 == 3 = "rd"
+      | otherwise = "th"
+
+
+
+-- https://www.codewars.com/kata/palindrome-for-your-dome/train/haskell
+isPalindrome :: String -> Bool
+isPalindrome xs = rev s == s
+  where
+    s = toLower <$> filter isAlphaNum xs
+
+rev :: [a] -> [a]
+rev []     = []
+rev (x:xs) = rev xs ++ [x]
