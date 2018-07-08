@@ -230,7 +230,7 @@ nbMonths startPriceOld startPriceNew savingperMonth percentLossByMonth =
         decRatio = 1 - perc / 100
       in
         (_1 * decRatio, _2 * decRatio, _3 + fromIntegral savingperMonth, perc, _5 + 1))
-    (fromIntegral $ startPriceNew, fromIntegral $ startPriceOld, 0, percentLossByMonth, 0) (cycle [False, True])
+    (fromIntegral startPriceNew, fromIntegral startPriceOld, 0, percentLossByMonth, 0) (cycle [False, True])
 
 
 
@@ -242,7 +242,7 @@ thirt n
   where
     step m = toInteger $ sum $ zipWith (*) xs ys
       where
-        xs = digitToInt <$> (reverse $ show m)
+        xs = digitToInt <$> reverse (show m)
         ys = cycle [1, 10, 9, 12, 3, 4]
 
 
@@ -261,7 +261,7 @@ groups :: String -> [String]
 groups str = go str []
   where
     go "" xs = xs
-    go s xs  = go (drop 3 s) ((reverse $ take 3 s) : xs)
+    go s xs  = go (drop 3 s) (reverse (take 3 s) : xs)
 
 
 
@@ -314,3 +314,46 @@ isPalindrome xs = rev s == s
 rev :: [a] -> [a]
 rev []     = []
 rev (x:xs) = rev xs ++ [x]
+
+
+
+-- https://www.codewars.com/kata/rainfall/train/haskell
+mean :: String -> String -> Double
+mean twn strng = common twn strng avg
+
+variance :: String -> String -> Double
+variance twn strng = common twn strng var
+
+common :: Num p => String -> String -> ([Double] -> p) -> p
+common twn strng f = maybe (-1) f $ lookup twn (parse strng)
+
+parse :: String -> [(String, [Double])]
+parse data0 = f <$> lines data0
+  where
+    f s = let str = splitOn ":" s in (head str, g $ last str)
+    g s = h <$> splitOn "," s
+    h s = read $ last $ splitOn " " s :: Double
+
+avg :: [Double] -> Double
+avg = (/) <$> sum <*> length'
+
+var :: [Double] -> Double
+var list = summedElements / lengthX
+  where
+    lengthX = length' list
+    summedElements = sum (map (\x -> (x - avg list) ^ 2) list)
+
+length' :: [a] -> Double
+length' = fromIntegral . length
+
+
+
+-- https://www.codewars.com/kata/backwards-read-primes/train/haskell
+backwardsPrime :: Integer -> Integer -> [Integer]
+backwardsPrime start stop = [n | n <- [start..stop], isPrime n, isReversedPrime n, isNotAPalindrome n]
+  where
+    isReversedPrime n = isPrime (read $ reverse $ show n :: Int)
+    isNotAPalindrome n = show n /= reverse (show n)
+
+isPrime :: Integral a => a -> Bool
+isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
