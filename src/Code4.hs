@@ -357,3 +357,53 @@ backwardsPrime start stop = [n | n <- [start..stop], isPrime n, isReversedPrime 
 
 isPrime :: Integral a => a -> Bool
 isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
+
+
+
+-- https://www.codewars.com/kata/the-shell-game/train/haskell
+findTheBall :: Int -> [(Int, Int)] -> Int
+findTheBall n []     = n
+findTheBall n (x:xs)
+  | fst x == n = findTheBall (snd x) xs
+  | snd x == n = findTheBall (fst x) xs
+  | otherwise = findTheBall n xs
+
+
+
+-- https://www.codewars.com/kata/financing-plan-on-planet-xy140z-n/train/haskell
+finance :: Integer -> Integer
+finance n = sum $ take (fromInteger n + 1) $ scanl (+) 0 [3,6..]
+
+
+
+-- https://www.codewars.com/kata/esolang-interpreters-number-1-introduction-to-esolangs-and-my-first-interpreter-ministringfuck/train/haskell
+myFirstInterpreter :: String -> String
+myFirstInterpreter code = snd $ foldl f (0, "") (filter (`elem` "+.") code)
+  where
+    f (p, s) a = if a == '+' then ((p + 1) `mod` 256, s)
+                             else (p, s ++ [chr p])
+
+
+
+-- https://www.codewars.com/kata/sum-of-many-ints/train/haskell
+f1 :: Integer -> Integer -> Integer
+f1 n m = (n `div` m) * m * (m - 1) `div` 2 + lo * (lo + 1) `div` 2
+  where
+    lo = n `mod` m
+
+
+
+-- https://www.codewars.com/kata/sequences-and-series/train/haskell
+getScore :: Integer -> Integer
+getScore n = 25 * n * (n + 1)
+
+
+
+-- https://www.codewars.com/kata/how-much/train/haskell
+howmuch :: Int -> Int -> [[String]]
+howmuch m n = [["M: " ++ show f, "B: " ++ show b, "C: " ++ show c] |
+            f <- [mn..mx], let c = (f - 1) `div` 9, let b = (f - 2) `div` 7,
+            f - 7 * b == 2, f - 9 * c == 1]
+  where
+    mn = min m n
+    mx = max m n
