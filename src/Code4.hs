@@ -6,6 +6,7 @@ import           Data.List
 import           Data.List.Split
 import qualified Data.Map        as M
 import           Data.Maybe
+import           Data.Tuple
 
 
 
@@ -407,3 +408,44 @@ howmuch m n = [["M: " ++ show f, "B: " ++ show b, "C: " ++ show c] |
   where
     mn = min m n
     mx = max m n
+
+
+
+-- https://www.codewars.com/kata/ball-upwards/train/haskell
+maxBall :: Int -> Int
+maxBall v0 = go $ scanl f (0, 0) [1..]
+  where
+    go []                 = error "yeah... nah"
+    go [(_,_)]            = error "yeah... nah"
+    go ((x,x'):(y,y'):xs) = if x' < y' then go ((y,y'):xs) else x
+    f _ t = (t, fromIntegral v0 * ktm * td - 0.5 * g * td * td)
+      where
+        td = fromIntegral t / 10
+        g = 9.81
+        ktm = 0.277778
+
+
+
+-- https://www.codewars.com/kata/format-words-into-a-sentence/train/haskell
+formatWords :: [String] -> String
+formatWords xs = case xfs of
+  []     -> ""
+  [x]    -> x
+  [x, y] -> x ++ " and " ++ y
+  ys     -> intercalate ", " (init ys) ++ " and " ++ last ys
+  where
+    xfs = filter (not . null) xs
+
+
+
+-- https://www.codewars.com/kata/string-average/train/haskell
+averageString :: String -> String
+averageString s = if null s || any isNothing justs then "n/a" else result
+  where
+    result = fromJust $
+      lookup (floor (fromIntegral (sum $ fmap fromJust justs) / fromIntegral (length justs)))
+        (fmap swap dict)
+    justs = (`lookup` dict) <$> words s
+    dict = [("zero", 0), ("one", 1), ("two", 2),
+      ("three", 3), ("four", 4), ("five", 5),
+      ("six", 6), ("seven", 7), ("eight", 8), ("nine", 9)]
