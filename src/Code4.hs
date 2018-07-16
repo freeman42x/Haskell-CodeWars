@@ -6,6 +6,7 @@ import           Data.List
 import           Data.List.Split
 import qualified Data.Map        as M
 import           Data.Maybe
+import           Data.Ratio
 import           Data.Tuple
 
 
@@ -355,9 +356,7 @@ backwardsPrime start stop = [n | n <- [start..stop], isPrime n, isReversedPrime 
   where
     isReversedPrime n = isPrime (read $ reverse $ show n :: Int)
     isNotAPalindrome n = show n /= reverse (show n)
-
-isPrime :: Integral a => a -> Bool
-isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
+    isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
 
 
 
@@ -449,3 +448,78 @@ averageString s = if null s || any isNothing justs then "n/a" else result
     dict = [("zero", 0), ("one", 1), ("two", 2),
       ("three", 3), ("four", 4), ("five", 5),
       ("six", 6), ("seven", 7), ("eight", 8), ("nine", 9)]
+
+
+
+-- https://www.codewars.com/kata/pi-approximation/train/haskell
+trunc10Dble :: Double -> Double
+trunc10Dble d = fromInteger (truncate $ d * (10^10)) / (10.0^^10)
+
+iterPi :: Double -> (Integer, Double)
+iterPi epsilon = res
+  where
+    xss = zipWith3 (\a b c -> (c, a / b)) (cycle [4, -4]) [1,3..] [1..]
+    xs = scanl (\(_, pi') (i, a) -> (i, pi' + a)) (toInteger 0, 0) xss
+    res = fmap trunc10Dble $ fromJust $ find (\(_, x) -> abs (x - pi) < epsilon) xs
+
+
+
+-- https://www.codewars.com/kata/hyper-sphere/train/haskell
+inSphere :: (Ord a, Num a) => [a] -> a -> Bool
+inSphere xs r = sum (fmap (^2) xs) <= r ^ 2
+
+
+
+-- https://www.codewars.com/kata/hamming-distance/train/haskell
+hamming :: String -> String -> Int
+hamming a b = length $ filter id $ zipWith (/=) a b
+
+
+
+-- https://www.codewars.com/kata/steps-in-primes/train/haskell
+step' :: Integer -> Integer -> Integer -> Maybe (Integer, Integer)
+step' g m n = find (\(_, b) -> isPrime b) $ zip primesmn (fmap (+g) primesmn)
+  where
+    primesmn = [i | i <- [m..n], isPrime i]
+    isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
+
+
+
+-- https://www.codewars.com/kata/playing-on-a-chessboard/train/haskell
+game :: Integer -> Either Integer (Integer, Integer)
+game n =
+  if denominator res == 2
+    then Right (numerator res, denominator res)
+    else Left $ numerator res
+  where
+    res = (n * n) % 2
+
+
+
+-- https://www.codewars.com/kata/a-disguised-sequence-i/train/haskell
+fcn :: Integer -> Integer
+fcn n = 2 ^ n
+
+
+
+-- https://www.codewars.com/kata/the-enigma-machine-part-1-the-plugboard/train/haskell
+plugboard :: String -> Either String (Char -> Char)
+plugboard xs = if isValid then Right board else Left "yeaaaaaah nah"
+  where
+    isValid = nub xs == xs && even (length xs) && length xs <= 20
+    board c = fromMaybe c $ lookup c $ wire xs []
+    wire [] dict       = dict
+    wire [_] _         = error "you wot mate?!"
+    wire (x:y:ys) dict = wire ys (dict ++ [(x, y), (y, x)])
+
+
+
+-- https://www.codewars.com/kata/feynmans-square-question/train/haskell
+countSquares :: Integer -> Integer
+countSquares n = n * (n + 1) * (2 * n + 1) `div` 6
+
+
+
+-- https://www.codewars.com/kata/highest-rank-number-in-an-array/train/haskell
+highestRank :: Ord c => [c] -> c
+highestRank = head . last . sortOn length . group . sort
