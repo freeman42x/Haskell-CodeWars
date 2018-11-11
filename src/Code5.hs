@@ -115,20 +115,6 @@ maximumSum xs n = sum $ take n $ sortBy (flip compare) xs
 
 
 -- https://www.codewars.com/kata/salesmans-travel/train/haskell
-ad :: String
-ad = "123 Main Street St. Louisville OH 43071,432 Main Long Road St. Louisville OH 43071,786 High Street Pollocksville NY 56432,\
-\54 Holy Grail Street Niagara Town ZP 32908,3200 Main Rd. Bern AE 56210,1 Gordon St. Atlanta RE 13000,\
-\10 Pussy Cat Rd. Chicago EX 34342,10 Gordon St. Atlanta RE 13000,58 Gordon Road Atlanta RE 13000,\
-\22 Tokyo Av. Tedmondville SW 43098,674 Paris bd. Abbeville AA 45521,10 Surta Alley Goodtown GG 30654,\
-\45 Holy Grail Al. Niagara Town ZP 32908,320 Main Al. Bern AE 56210,14 Gordon Park Atlanta RE 13000,\
-\100 Pussy Cat Rd. Chicago EX 34342,2 Gordon St. Atlanta RE 13000,5 Gordon Road Atlanta RE 13000,\
-\2200 Tokyo Av. Tedmondville SW 43098,67 Paris St. Abbeville AA 45521,11 Surta Avenue Goodtown GG 30654,\
-\45 Holy Grail Al. Niagara Town ZP 32918,320 Main Al. Bern AE 56215,14 Gordon Park Atlanta RE 13200,\
-\100 Pussy Cat Rd. Chicago EX 34345,2 Gordon St. Atlanta RE 13222,5 Gordon Road Atlanta RE 13001,\
-\2200 Tokyo Av. Tedmondville SW 43198,67 Paris St. Abbeville AA 45522,11 Surta Avenue Goodville GG 30655,\
-\2222 Tokyo Av. Tedmondville SW 43198,670 Paris St. Abbeville AA 45522,114 Surta Avenue Goodville GG 30655,\
-\2 Holy Grail Street Niagara Town ZP 32908,3 Main Rd. Bern AE 56210,77 Gordon St. Atlanta RE 13000"
-
 travel :: String -> String -> String
 travel r zipcode = zipcode ++ ":" ++ intercalate "," (snd <$> ls) ++ "/" ++ intercalate "," (fst <$> ls)
   where
@@ -175,3 +161,77 @@ sortScores (name1, score1) (name2, score2)
   | score1 < score2 = GT
   | score1 > score2 = LT
   | otherwise = compare name1 name2
+
+
+
+-- https://www.codewars.com/kata/count-the-smiley-faces/train/haskell
+countSmileys :: [String] -> Int
+countSmileys = length . filter isSmiley
+
+isSmiley :: String -> Bool
+isSmiley [h, m, t] = isEyes h && isNose m && isMouth t
+isSmiley [h, t]    = isEyes h && isMouth t
+isSmiley _         = False
+
+isEyes :: Char -> Bool
+isEyes ':' = True
+isEyes ';' = True
+isEyes _   = False
+
+isNose :: Char -> Bool
+isNose '-' = True
+isNose '~' = True
+isNose _   = False
+
+isMouth :: Char -> Bool
+isMouth ')' = True
+isMouth 'D' = True
+isMouth _   = False
+
+
+
+-- https://www.codewars.com/kata/data-reverse/train/haskell
+dataReverse :: [Int] -> [Int]
+dataReverse = concat . reverse . chunksOf 8
+
+
+
+-- https://www.codewars.com/kata/make-the-deadfish-swim/train/haskell
+parse :: String -> [Int]
+parse = init . reverse . foldl fn [0]
+
+fn :: [Int] -> Char -> [Int]
+fn (x:xs) 'i' = x + 1: xs
+fn (x:xs) 'd' = x - 1: xs
+fn (x:xs) 's' = x ^ 2: xs
+fn (x:xs) 'o' = x : x : xs
+fn xs _       = xs
+
+
+
+-- https://www.codewars.com/kata/mutual-recursion/train/haskell
+f :: Int -> Int
+f 0 = 1
+f n = n - mns !! (fns !! (n - 1))
+
+m :: Int -> Int
+m 0 = 0
+m n = n - fns !! (mns !! (n - 1))
+
+fns :: [Int]
+fns = fmap f [0..]
+
+mns :: [Int]
+mns = fmap m [0..]
+
+
+
+-- https://www.codewars.com/kata/tank-truck/train/haskell
+tankvol :: Int -> Int -> Int -> Int
+tankvol h d vt = floor $ area * l
+  where
+    r = fromIntegral d / 2
+    a = r - fromIntegral h
+    theta = (*2) $ acos $ a / r
+    area = 1/2 * (theta - sin theta) * r ^ 2
+    l = fromIntegral vt / (pi * r ^ 2)
