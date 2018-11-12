@@ -235,3 +235,57 @@ tankvol h d vt = floor $ area * l
     theta = (*2) $ acos $ a / r
     area = 1/2 * (theta - sin theta) * r ^ 2
     l = fromIntegral vt / (pi * r ^ 2)
+
+
+
+-- https://www.codewars.com/kata/piano-kata-part-1/train/haskell
+blackOrWhiteKey :: Int -> String
+blackOrWhiteKey keyPressCount = if ind `elem` [1, 4, 6, 9, 11] then "black" else "white"
+  where
+    ind = ((keyPressCount - 1) `mod` 88) `mod` 12
+
+
+
+-- https://www.codewars.com/kata/decipher-this/train/haskell
+decipherThis :: String -> String
+decipherThis message = unwords $ decipher <$> words message
+
+decipher :: String -> String
+decipher "" = ""
+decipher s = fc : decBody body
+  where
+    fc = chr $ read $ takeWhile isDigit s
+    body = dropWhile isDigit s
+
+decBody :: String -> String
+decBody "" = ""
+decBody [b] = [b]
+decBody [h, l] = [l, h]
+decBody body = [l] ++ ib ++ [h]
+  where
+    h = head body
+    l = last body
+    ib = tail $ init body
+
+
+
+-- https://www.codewars.com/kata/collatz/train/haskell
+collatz :: Int -> String
+collatz n
+  | n == 1 = "1"
+  | otherwise = show n ++ "->" ++ collatz (fun n)
+
+fun :: Int -> Int
+fun n
+  | even n = n `div` 2
+  | otherwise = 3 * n + 1
+
+
+
+-- https://www.codewars.com/kata/transform-to-prime/train/haskell
+minimumNumber :: [Integer] -> Integer
+minimumNumber n = nextPrime - sumn
+  where
+    sumn = sum n
+    nextPrime = head $ filter isPrime [sumn..]
+    isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
