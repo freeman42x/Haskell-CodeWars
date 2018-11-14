@@ -3,7 +3,9 @@ module Code5 where
 import           Data.Char
 import           Data.List
 import           Data.List.Split
+import           Data.Map.Strict (Map, fromList, (!))
 import           Data.Maybe
+import           Numeric
 import           Prelude         hiding (Either (..))
 import           Text.Printf
 
@@ -366,3 +368,38 @@ mazeSolver maze directions position
                             'E' -> (x + 1, y)
                             'S' -> (x, y + 1)
                             _   -> (x - 1, y)
+
+
+
+-- https://www.codewars.com/kata/parse-html-slash-css-colors/train/haskell
+parseHtmlColor :: String -> Map Char Int
+parseHtmlColor s
+  | is6chars = decoded6chars s
+  | is3chars = parseHtmlColor $ from3to6chars s
+  | otherwise = parseHtmlColor $ presetColors ! (toLower <$> s)
+    where
+      is6chars = length s == 7 && head s == '#'
+      is3chars = length s == 4 && head s == '#'
+      from3to6chars ('#':r:g:b:"") = '#' : r : r : g : g : b : [b]
+      from3to6chars _              = error "Invalid #RGB color"
+      decoded6chars ('#':rgbs) = fromList [('r', r), ('g', g), ('b', b)]
+        where
+          rgbsi = (\c -> fst $ head $ readHex $ [c]) <$> rgbs
+          r = rgbsi !! 0 * 16 + rgbsi !! 1
+          g = rgbsi !! 2 * 16 + rgbsi !! 3
+          b = rgbsi !! 4 * 16 + rgbsi !! 5
+      decoded6chars _ = error "Invalid #RRGGBB color"
+
+presetColors :: Map String String
+presetColors = undefined
+
+
+
+-- https://www.codewars.com/kata/bankers-plan/train/haskell
+fortune :: Int -> Double -> Int -> Int -> Double -> Bool
+fortune f0 p c0 n i
+  | n == 0 = f0 > 0
+  | otherwise = fortune fnext p cnext (n - 1) i
+    where
+      fnext = floor $ fromIntegral f0 + p * fromIntegral f0 / 100 - fromIntegral c0
+      cnext = floor $ fromIntegral c0 + i * fromIntegral c0 / 100
