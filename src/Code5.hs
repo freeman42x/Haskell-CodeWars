@@ -320,7 +320,7 @@ mini :: Integer -> Integer -> Integer
 mini = min
 
 operArray :: (Integer -> Integer -> Integer) -> [Integer] -> Integer -> [Integer]
-operArray fct arr init = reverse $ tail $ foldl func [init] arr
+operArray fct arr ini = reverse $ tail $ foldl func [ini] arr
   where
     func a c = [curr] ++ [curr] ++ tail a
       where
@@ -336,3 +336,33 @@ mapc :: Char -> Char
 mapc '3' = '7'
 mapc '7' = '3'
 mapc c   = c
+
+
+
+-- https://www.codewars.com/kata/maze-runner/train/haskell
+mazeRunner :: [[Int]] -> String -> String
+mazeRunner maze directions = mazeSolver maze directions (elementFind maze 2)
+
+elementFind :: [[Int]] -> Int -> Maybe (Int, Int)
+elementFind c t = listToMaybe [ (x,y) | (y,line) <- zip [0..] c, x <- elemIndices t line ]
+
+mazeSolver :: [[Int]] -> String -> Maybe (Int, Int) -> String
+mazeSolver maze directions position
+  | isNothing position = "Lost"
+  | wentOutside || tile == 1 = "Dead"
+  | tile == 3 = "Finish"
+  | otherwise = mazeSolver maze (tail directions) newPosition
+    where
+      pos = fromJust position
+      x = fst pos
+      y = snd pos
+      tile = maze !! y !! x
+      wentOutside = x < 0 || y < 0 || x >= width || y >= height
+      height = length maze
+      width = length $ head maze
+      newPosition = if null directions then Nothing else newPos
+      newPos = Just $ case head directions of
+                            'N' -> (x, y - 1)
+                            'E' -> (x + 1, y)
+                            'S' -> (x, y + 1)
+                            _   -> (x - 1, y)
