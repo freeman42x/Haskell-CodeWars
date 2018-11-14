@@ -289,3 +289,50 @@ minimumNumber n = nextPrime - sumn
     sumn = sum n
     nextPrime = head $ filter isPrime [sumn..]
     isPrime x = null [i | i <- [2.. floor $ sqrt $ fromIntegral x], x `mod` i == 0]
+
+
+
+-- https://www.codewars.com/kata/rotate-array-js/train/haskell
+rotate :: (Show a, Eq a) => Int -> [a] -> [a]
+rotate _ [] = []
+rotate n a
+ | n < 0 = a
+ | otherwise = take l $ drop (l - n `mod` l) $ cycle a
+    where
+      l = length a
+
+
+
+-- https://www.codewars.com/kata/reducing-by-steps/train/haskell
+gcdi :: Integer -> Integer -> Integer
+gcdi = gcd
+
+lcmu :: Integer -> Integer -> Integer
+lcmu = lcm
+
+som :: Integer -> Integer -> Integer
+som = (+)
+
+maxi :: Integer -> Integer -> Integer
+maxi = max
+
+mini :: Integer -> Integer -> Integer
+mini = min
+
+operArray :: (Integer -> Integer -> Integer) -> [Integer] -> Integer -> [Integer]
+operArray fct arr init = reverse $ tail $ foldl func [init] arr
+  where
+    func a c = [curr] ++ [curr] ++ tail a
+      where
+        curr = fct (head a) c
+
+
+
+-- https://www.codewars.com/kata/sorting-on-planet-twisted-3-7/train/haskell
+sortTwisted37 :: [Int] -> [Int]
+sortTwisted37 arr = read . (mapc <$>) . show <$> (sort $ read . (mapc <$>) . show <$> arr :: [Int])
+
+mapc :: Char -> Char
+mapc '3' = '7'
+mapc '7' = '3'
+mapc c   = c
