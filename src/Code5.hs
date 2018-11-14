@@ -403,3 +403,19 @@ fortune f0 p c0 n i
     where
       fnext = floor $ fromIntegral f0 + p * fromIntegral f0 / 100 - fromIntegral c0
       cnext = floor $ fromIntegral c0 + i * fromIntegral c0 / 100
+
+
+
+-- https://www.codewars.com/kata/braking-well/train/haskell
+dist :: Double -> Double -> Double
+dist v mu = brakingDistance + reactionDistance
+  where
+    reactionDistance = vmps
+    brakingDistance = vmps * vmps / 2 * mu * g
+    g = 9.81
+    vmps = v * 5 / 18
+
+speed :: Double -> Double -> Double
+speed d mu = vmps * 18 / 5
+  where g = 9.81
+        vmps = -mu * g + sqrt (mu ^^ 2 * g ^^ 2 + 2 * d * mu * g)
