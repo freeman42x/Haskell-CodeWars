@@ -85,9 +85,9 @@ isAlt :: String -> Bool
 isAlt []       = True
 isAlt [_]      = True
 isAlt (x:y:xs) = if isVowel x == isVowel y then False else isAlt (y:xs)
-
-isVowel :: Char -> Bool
-isVowel = flip elem "aeiou"
+  where
+    isVowel :: Char -> Bool
+    isVowel = flip elem "aeiou"
 
 
 
@@ -276,11 +276,11 @@ collatz :: Int -> String
 collatz n
   | n == 1 = "1"
   | otherwise = show n ++ "->" ++ collatz (fun n)
-
-fun :: Int -> Int
-fun n
-  | even n = n `div` 2
-  | otherwise = 3 * n + 1
+  where
+    fun :: Int -> Int
+    fun n
+      | even n = n `div` 2
+      | otherwise = 3 * n + 1
 
 
 
@@ -419,3 +419,27 @@ speed :: Double -> Double -> Double
 speed d mu = vmps * 18 / 5
   where g = 9.81
         vmps = -mu * g + sqrt (mu ^^ 2 * g ^^ 2 + 2 * d * mu * g)
+
+
+
+-- https://www.codewars.com/kata/consonant-value/train/haskell
+solve :: String -> Int
+solve = maximum . sumsOfGroups . groups
+  where
+    groups :: String -> [String]
+    groups s = foldl func [""] s
+      where
+        func acc@(x:xs) c
+          | isVowel c && not (null (head acc)) = "" : acc
+          | isVowel c = acc
+          | otherwise = (c : x) : xs
+        func _ _ = error "Should never happen"
+
+    isVowel :: Char -> Bool
+    isVowel c = c `elem` "aeiou"
+
+    letterToInt :: Char -> Int
+    letterToInt c = ord c - ord 'a' + 1
+
+    sumsOfGroups :: [String] -> [Int]
+    sumsOfGroups = (sum . (letterToInt <$>) <$>)
