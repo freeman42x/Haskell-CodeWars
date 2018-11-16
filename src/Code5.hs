@@ -427,7 +427,7 @@ solve :: String -> Int
 solve = maximum . sumsOfGroups . groups
   where
     groups :: String -> [String]
-    groups s = foldl func [""] s
+    groups = foldl func [""]
       where
         func acc@(x:xs) c
           | isVowel c && not (null (head acc)) = "" : acc
