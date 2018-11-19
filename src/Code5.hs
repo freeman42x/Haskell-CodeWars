@@ -465,3 +465,12 @@ isColliding x y x1 y1 x2 y2 = c && d /= 0 && (r >= 0 && s >= 0 && s <= 1)
     d = (dx * (y2 - y1)) - dy * (x2 - x1)
     r = (((y - y1) * (x2 - x1)) - (x - x1) * (y2 - y1)) / d
     s = (((y - y1) * dx) - (x - x1) * dy) / d
+
+
+
+-- https://www.codewars.com/kata/reach-me-and-sum-my-digits/train/haskell
+sumDigNthTerm :: Int -> [Int] -> Int -> Int
+sumDigNthTerm initval patternl nthterm = sum (digitToInt <$> show selectedTerm)
+  where
+    terms = scanl (+) initval (cycle patternl)
+    selectedTerm = terms !! (nthterm - 1)
