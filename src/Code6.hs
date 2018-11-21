@@ -20,3 +20,16 @@ runLengthEncoding = reverse . foldl f ([])
       | ch == c = (count + 1, ch):xs
       | otherwise = (1, c) : acc
     f [] c = [(1, c)]
+
+
+
+-- https://www.codewars.com/kata/lucas-numbers/train/haskell
+lucasnum :: Int -> Integer
+lucasnum n
+ | n == 0 = 2
+ | n == 1 = 1
+ | n > 1 = (lucasnumPos !! (n - 1)) + (lucasnumPos !! (n - 2))
+ | otherwise = (lucasnumNeg !! (-n - 1)) - (lucasnumNeg !! (-n))
+ where
+  lucasnumPos = lucasnum <$> [0..]
+  lucasnumNeg = lucasnum <$> [1, 0..]
