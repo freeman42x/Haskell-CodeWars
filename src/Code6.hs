@@ -1,6 +1,7 @@
 module Code6 where
 
-import           Data.List
+import           Data.Char
+-- import           Data.List
 
 
 
@@ -33,3 +34,21 @@ lucasnum n
  where
   lucasnumPos = lucasnum <$> [0..]
   lucasnumNeg = lucasnum <$> [1, 0..]
+
+
+
+-- https://www.codewars.com/kata/up-and-down/train/haskell
+arrange :: String -> String
+arrange s = unwords $ arrange' (words s) (cycle [(>), (<)])
+
+arrange' :: [String] -> [Int -> Int -> Bool] -> [String]
+arrange' (x1:x2:xs) (f:fs)
+  | length x1 `f` length x2 = upper x2 f : arrange' (x1 : xs) fs
+  | otherwise = upper x1 f : arrange' (x2 : xs) fs
+arrange' [xs] (f:_) = [upper xs f]
+arrange' [] _ = []
+arrange' [_] _ = []
+arrange' (_:_:_) _ = []
+
+upper :: (Num t2, Num t1, Functor f) => f Char -> (t1 -> t2 -> Bool) -> f Char
+upper s f = (if f 0 1 then toUpper else toLower) <$> s
