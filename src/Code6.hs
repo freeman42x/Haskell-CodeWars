@@ -1,6 +1,7 @@
 module Code6 where
 
 import           Data.Char
+import           Text.Printf
 -- import           Data.List
 
 
@@ -15,7 +16,7 @@ maxPizza n
 
 -- https://www.codewars.com/kata/run-length-encoding/train/haskell
 runLengthEncoding :: String -> [(Int, Char)]
-runLengthEncoding = reverse . foldl f ([])
+runLengthEncoding = reverse . foldl f []
   where
     f acc@((count, ch):xs) c
       | ch == c = (count + 1, ch):xs
@@ -52,3 +53,47 @@ arrange' (_:_:_) _ = []
 
 upper :: (Num t2, Num t1, Functor f) => f Char -> (t1 -> t2 -> Bool) -> f Char
 upper s f = (if f 0 1 then toUpper else toLower) <$> s
+
+
+
+-- https://www.codewars.com/kata/clocky-mc-clock-face/train/haskell
+whatTimeIsIt :: Float -> String
+whatTimeIsIt angle = printf "%02d:%02d" hours seconds
+  where
+    hours' = floor angle `div` 30 :: Int
+    hours = case hours' of
+              0 -> 12
+              h -> h
+    secondsAngle = angle - fromIntegral (30 * hours')
+    seconds = floor $ 2 * secondsAngle :: Int
+
+
+
+-- https://www.codewars.com/kata/calculate-the-function-f-x-for-a-simple-linear-sequence-easy/train/haskell
+getFunction :: [Integer] -> Maybe String
+getFunction values
+  | isLinear = Just $ show linearFunction
+  | otherwise = Nothing
+  where
+    a = values !! 1 - head values
+    b = values !! 1 - a
+    f x = a * x + b
+    isLinear = f 2 == values !! 2 && f 3 == values !! 3 && f 4 == values !! 4
+    linearFunction = LinearFunction a b
+
+data LinearFunction = LinearFunction Integer Integer
+
+instance Show LinearFunction where
+  show (LinearFunction a b) = "f(x) = " ++ prefix ++ suffix
+    where
+      prefix
+        | a == 0 = ""
+        | a == 1 = "x"
+        | otherwise = show a ++ "x"
+      suffix
+        | b < 0 && a == 0 = "-" ++ show (abs b)
+        | b < 0 && a /= 0 = " + -" ++ show (abs b)
+        | b < 0 = " - " ++ show (abs b)
+        | b == 0 = ""
+        | a == 0 = show b
+        | otherwise = " + " ++ show b
