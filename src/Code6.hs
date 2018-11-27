@@ -1,8 +1,9 @@
 module Code6 where
 
 import           Data.Char
+import           Data.List
+import           Data.Maybe
 import           Text.Printf
--- import           Data.List
 
 
 
@@ -97,3 +98,34 @@ instance Show LinearFunction where
         | b == 0 = ""
         | a == 0 = show b
         | otherwise = " + " ++ show b
+
+
+
+-- https://www.codewars.com/kata/fruit-machine/train/haskell
+fruit :: [[String]] -> [Int] -> Int
+fruit reels spins = score h b t
+  where
+    [h, b, t] = zipWith (!!) reels spins
+
+score :: String -> String -> String -> Int
+score h b t
+  | allSame = 10 * getValue h
+  | exactlyOneWild && twoSameWithWild = 2 * getValue f
+  | twoSameNoWild = getValue twoSameGet
+  | otherwise = 0
+  where
+    allSame = h == b && b == t
+    exactlyOneWild = 1 == length (filter (=="Wild") [h, b, t])
+    [f, e] = filter (/="Wild") [h, b, t]
+    twoSameWithWild = f == e
+    twoSameNoWild = h == b || b == t || h == t
+    twoSameGet
+      | h == b = h
+      | h == t = h
+      | otherwise = b
+
+reelIndex :: [(Int, String)]
+reelIndex = zip [10,9..] ["Wild","Star","Bell","Shell","Seven","Cherry","Bar","King","Queen","Jack"]
+
+getValue :: String -> Int
+getValue str = fst $ fromJust $ find (\(_, s) -> s == str) reelIndex
