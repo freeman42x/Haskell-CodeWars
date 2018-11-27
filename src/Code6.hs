@@ -129,3 +129,14 @@ reelIndex = zip [10,9..] ["Wild","Star","Bell","Shell","Seven","Cherry","Bar","K
 
 getValue :: String -> Int
 getValue str = fst $ fromJust $ find (\(_, s) -> s == str) reelIndex
+
+
+
+-- https://www.codewars.com/kata/mexican-wave/train/haskell
+wave :: String -> [String]
+wave str = result
+  where
+    f i = reverse $ take (length str) $ drop i (cycle (toUpper : replicate (length str - 1) id))
+    g i = zipWith (\a b -> b a) str (f i)
+    x = fmap g [1..length str]
+    result = filter (any isUpper) x
