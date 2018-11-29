@@ -140,3 +140,14 @@ wave str = result
     g i = zipWith (\a b -> b a) str (f i)
     x = fmap g [1..length str]
     result = filter (any isUpper) x
+
+
+
+-- https://www.codewars.com/kata/lottery-ticket/train/haskell
+bingo :: [(String,Int)] -> Int -> String
+bingo xs reqMiniWinsCount
+  | miniWinsCount >= reqMiniWinsCount = "Winner!"
+  | otherwise = "Loser!"
+  where
+    miniWin s i = any (\c -> ord c == i) s
+    miniWinsCount = length $ filter (uncurry miniWin) xs
