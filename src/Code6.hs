@@ -151,3 +151,43 @@ bingo xs reqMiniWinsCount
   where
     miniWin s i = any (\c -> ord c == i) s
     miniWinsCount = length $ filter (uncurry miniWin) xs
+
+
+
+-- https://www.codewars.com/kata/single-word-pig-latin/train/haskell
+pigLatin :: String -> Maybe String
+pigLatin xs
+  | hasNonAlpha = Nothing
+  | hasNoVowels = Just $ lowercaseXs ++ "ay"
+  | startsWithVowel = Just $ lowercaseXs ++ "way"
+  | startsWithConsonant = Just $ tailConsonants ++ headConsonants ++ "ay"
+  | otherwise = Nothing
+    where
+      hasNonAlpha = not $ all isAlpha lowercaseXs
+      hasNoVowels = all isConsonant lowercaseXs
+      isVowel c = c `elem` "aeiou"
+      isConsonant c = not $ isVowel c
+      startsWithVowel = isVowel $ head lowercaseXs
+      startsWithConsonant = not startsWithVowel
+      lowercaseXs = toLower <$> xs
+      headConsonants = takeWhile isConsonant lowercaseXs
+      tailConsonants = dropWhile isConsonant lowercaseXs
+
+
+
+-- https://www.codewars.com/kata/sqrt-approximation/train/haskell
+sqrtInt :: Integral n => n -> Either (n,n) n
+sqrtInt n
+  | equal = Right floorRes
+  | otherwise = Left (floorRes, ceiling res)
+  where
+    sqrt2 x = fst $ until (uncurry(==)) (\(_,x0) -> (x0,(x0+x/x0)/2)) (x,x/2)
+    res = sqrt2 $ fromIntegral n
+    floorRes = floor res
+    equal = res == fromIntegral floorRes
+
+
+
+-- https://www.codewars.com/kata/rank-vector/train/haskell
+ranks :: (Eq a, Ord a) => [a] -> [Int]
+ranks = undefined
