@@ -16,7 +16,13 @@ extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 library
-  -- exposed-modules:
+  exposed-modules:    Code0
+                    , Code1
+                    , Code2
+                    , Code3
+                    , Code4
+                    , Code5
+                    , Code6
   -- other-modules:
 
   -- other-extensions:
