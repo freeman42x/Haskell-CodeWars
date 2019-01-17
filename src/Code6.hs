@@ -5,8 +5,6 @@ import           Data.List
 import           Data.Maybe
 import           Text.Printf
 
-
-
 -- https://www.codewars.com/kata/pizza-pieces/train/haskell
 maxPizza :: Integer -> Maybe Integer
 maxPizza n
@@ -188,6 +186,12 @@ sqrtInt n
 
 
 
--- https://www.codewars.com/kata/rank-vector/train/haskell
-ranks :: (Eq a, Ord a) => [a] -> [Int]
-ranks = undefined
+-- https://www.codewars.com/kata/if-you-cant-sleep-just-count-sheep/train/haskell
+countSheep :: Int -> String
+countSheep = concatMap (\i -> show i ++ " sheep...") . enumFromTo 1
+
+
+
+-- https://www.codewars.com/kata/sum-mixed-array/train/haskell
+sumMix :: [Either String Int] -> Int
+sumMix = error "y no codez?"
