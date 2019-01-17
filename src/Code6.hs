@@ -194,4 +194,20 @@ countSheep = concatMap (\i -> show i ++ " sheep...") . enumFromTo 1
 
 -- https://www.codewars.com/kata/sum-mixed-array/train/haskell
 sumMix :: [Either String Int] -> Int
-sumMix = error "y no codez?"
+sumMix xs = sum $ f <$> xs
+  where
+    f c = case c of
+            Left ch -> read ch
+            Right i -> i
+
+
+
+-- https://www.codewars.com/kata/the-feast-of-many-beasts/train/haskell
+feast :: String -> String -> Bool
+feast beast dish = head beast == head dish && last beast == last dish
+
+
+
+-- https://www.codewars.com/kata/l1-set-alarm/train/haskell
+setAlarm :: Bool -> Bool -> Bool
+setAlarm employed vacation = employed && not vacation
