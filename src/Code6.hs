@@ -211,3 +211,51 @@ feast beast dish = head beast == head dish && last beast == last dish
 -- https://www.codewars.com/kata/l1-set-alarm/train/haskell
 setAlarm :: Bool -> Bool -> Bool
 setAlarm employed vacation = employed && not vacation
+
+
+
+-- https://www.codewars.com/kata/simple-fun-number-1-seats-in-theater/train/haskell
+seatsBlocked :: Int -> Int -> Int -> Int -> Int
+seatsBlocked tot_cols tot_rows col row = (tot_cols - col + 1) * (tot_rows - row)
+
+
+
+-- https://www.codewars.com/kata/is-he-gonna-survive/train/haskell
+hero :: Int -> Int -> Bool
+hero bullets dragons = bullets >= dragons * 2
+
+
+
+-- https://www.codewars.com/kata/correct-the-mistakes-of-the-character-recognition-software/train/haskell
+correct :: String -> String
+correct s = f <$> s
+  where
+    f c = case c of
+            '5' -> 'S'
+            '0' -> 'O'
+            '1' -> 'I'
+            ch  -> ch
+
+
+
+-- https://www.codewars.com/kata/get-ascii-value-of-character/train/haskell
+getASCII :: Char -> Int
+getASCII = ord
+
+
+
+-- https://www.codewars.com/kata/you-only-need-one-beginner/train/haskell
+check :: Eq a => [a] -> a -> Bool
+check = flip elem
+
+
+
+-- https://www.codewars.com/kata/twice-as-old/train/haskell
+twice_as_old :: Int -> Int -> Int
+twice_as_old father son = abs $ father - 2 * son
+
+
+
+-- https://www.codewars.com/kata/holiday-viii-duty-free/train/haskell
+dutyFree :: Float -> Float -> Float -> Int
+dutyFree p d c = floor $ c / (p * d / 100)
