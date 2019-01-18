@@ -291,3 +291,28 @@ light "green" = "yellow"
 light "yellow" = "red"
 light "red" = "green"
 light _ = error "You wot mate?"
+
+
+
+-- https://www.codewars.com/kata/beginner-reduce-but-grow/train/haskell
+grow :: [Int] -> Int
+grow = product
+
+
+
+-- https://www.codewars.com/kata/returning-strings/train/haskell
+greeting :: String -> String
+greeting name = "Hello, " ++ name ++ " how are you doing today?"
+
+
+
+-- https://www.codewars.com/kata/my-head-is-at-the-wrong-end/train/haskell
+reorder :: [String] -> [String]
+reorder [h,b,t] = [t, b, h]
+reorder _ = error "You wot mate?"
+
+
+
+-- https://www.codewars.com/kata/find-nearest-square-number/train/haskell
+nearestSquare :: Int -> Int
+nearestSquare = (^ 2) . round . sqrt . fromIntegral
