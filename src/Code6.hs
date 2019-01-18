@@ -259,3 +259,35 @@ twice_as_old father son = abs $ father - 2 * son
 -- https://www.codewars.com/kata/holiday-viii-duty-free/train/haskell
 dutyFree :: Float -> Float -> Float -> Int
 dutyFree p d c = floor $ c / (p * d / 100)
+
+
+
+-- https://www.codewars.com/kata/pillars/train/haskell
+pillars :: Int -> Int -> Int -> Int
+pillars 1 _ _ = 0
+pillars 2 d _ = d * 100
+pillars n d w = (n - 1) * d * 100 + (n - 2) * w
+
+
+
+-- https://www.codewars.com/kata/thinkful-number-drills-blue-and-red-marbles/train/haskell
+guessBlue :: Int -> Int -> Int -> Int -> Double
+guessBlue nb nr pb pr = fromIntegral remB / fromIntegral (remB + remR)
+  where
+    remB = nb - pb
+    remR = nr - pr
+
+
+
+-- https://www.codewars.com/kata/thinkful-number-drills-pixelart-planning/train/haskell
+go :: Int -> Int -> Bool
+go n m = n `mod` m == 0
+
+
+
+-- https://www.codewars.com/kata/thinkful-logic-drills-traffic-light/train/haskell
+light :: String -> String
+light "green" = "yellow"
+light "yellow" = "red"
+light "red" = "green"
+light _ = error "You wot mate?"
