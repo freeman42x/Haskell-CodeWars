@@ -300,6 +300,7 @@ grow = product
 
 
 
+
 -- https://www.codewars.com/kata/returning-strings/train/haskell
 greeting :: String -> String
 greeting name = "Hello, " ++ name ++ " how are you doing today?"
@@ -316,3 +317,21 @@ reorder _ = error "You wot mate?"
 -- https://www.codewars.com/kata/find-nearest-square-number/train/haskell
 nearestSquare :: Int -> Int
 nearestSquare = (^ 2) . round . sqrt . fromIntegral
+
+
+
+-- https://www.codewars.com/kata/do-i-get-a-bonus/train/haskell
+iHazBonus :: Float->  Bool -> String
+iHazBonus salary bonus = "$" ++ show (if bonus then salary * 10 else salary)
+
+
+
+-- https://www.codewars.com/kata/simple-multiplication/train/haskell
+simpleMultiplication :: Int -> Int
+simpleMultiplication n = n * if even n then 8 else 9
+
+
+
+-- https://www.codewars.com/kata/grasshopper-terminal-game-combat-function-1/train/haskell
+updateHealth :: Double -> Double -> Double
+updateHealth health damage = max 0 (health - damage)
