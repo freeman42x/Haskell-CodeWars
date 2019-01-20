@@ -1,5 +1,6 @@
 module Code6 where
 
+import           Control.Monad
 import           Data.Char
 import           Data.List
 import           Data.Maybe
@@ -335,3 +336,54 @@ simpleMultiplication n = n * if even n then 8 else 9
 -- https://www.codewars.com/kata/grasshopper-terminal-game-combat-function-1/train/haskell
 updateHealth :: Double -> Double -> Double
 updateHealth health damage = max 0 (health - damage)
+
+
+
+-- https://www.codewars.com/kata/expressions-matter/train/haskell
+expression :: Int -> Int -> Int -> Int
+expression a b c = maximum
+  [ a + b + c
+  , a * b * c
+  , a + (b * c)
+  , (a + b) * c
+  , a * (b + c)
+  , (a * b) + c
+  ]
+
+
+
+-- https://www.codewars.com/kata/simple-fun-number-176-reverse-letter/train/haskell
+reverseLetter :: String -> String
+reverseLetter = reverse . filter isAlpha
+
+
+
+-- https://www.codewars.com/kata/float-precision/train/haskell
+solution :: Float -> Float
+solution = (/100) . fromIntegral . round . (* 100)
+
+
+
+-- https://www.codewars.com/kata/find-sum-of-top-left-to-bottom-right-diagonals/train/haskell
+diagonalSum :: [[Int]] -> Int
+diagonalSum arr = sum $ (\i -> arr !! i !! i) <$> [0..length arr - 1]
+
+
+
+-- https://www.codewars.com/kata/counting-in-the-amazon/train/haskell
+countArara :: Int -> String
+countArara n = unwords $ replicate (n `div` 2) "adak" ++ if odd n then ["anane"] else []
+
+
+
+-- https://www.codewars.com/kata/form-the-minimum/train/haskell
+minValue :: [Int] -> Int
+minValue = read . (show =<<) . nub . sort
+
+
+
+-- https://www.codewars.com/kata/bumps-in-the-road/train/haskell
+bump :: String -> String
+bump str
+  | length (filter (=='n') str) <= 15 = "Woohoo!"
+  | otherwise = "Car Dead"
