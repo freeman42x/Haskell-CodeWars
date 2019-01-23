@@ -387,3 +387,9 @@ bump :: String -> String
 bump str
   | length (filter (=='n') str) <= 15 = "Woohoo!"
   | otherwise = "Car Dead"
+
+
+
+-- https://www.codewars.com/kata/count-all-the-sheep-on-farm-in-the-heights-of-new-zealand/train/haskell
+lostSheep :: [Int] -> [Int] -> Int -> Int
+lostSheep xs ys t = t - sum xs - sum ys
